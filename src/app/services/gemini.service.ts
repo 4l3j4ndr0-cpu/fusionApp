@@ -23,12 +23,13 @@ export class GeminiService {
 
     const result = await model.generateContent(promt);
     const response  = await  result.response;
-    const text = response.text();
+    const text = await response.text();
     console.log(text);
     this.messageHistory.next({
       from: 'bot',
       message: text
     })
+    return text
   }
 
   public getMessageHistory(): Observable<any> {   
