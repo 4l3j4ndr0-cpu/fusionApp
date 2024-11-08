@@ -1,22 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
-import { RouterLink } from '@angular/router';
-
+import { DatabaseService } from '../services/database.service';
+import {Usuario} from '../services/modulos.service';
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.page.html',
   styleUrls: ['./registro.page.scss'],
   standalone: true,
-  imports: [RouterLink,IonicModule]
+  imports: [IonicModule, CommonModule, FormsModule]
 })
-export class RegistroPage implements OnInit {
+export class RegistroPage {
+  user: Usuario = new Usuario();
 
-  constructor() { }
+  constructor(private dbService: DatabaseService) {}
 
-  ngOnInit() {
+  async onSubmit() {
+    try {
+      await this.dbService.insertUsuario(this.user);
+      console.log('Usuario registrado exitosamente');
+    } catch (error) {
+      console.error('Error al registrar usuario:', error);
+    }
   }
-
 }
