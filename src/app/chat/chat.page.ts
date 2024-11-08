@@ -51,28 +51,7 @@ export class ChatPage {
     if (this.prompt && !this.loading) {
       this.loading = true;
       const data = `
-      ${this.prompt} siguiendo este formato:
-      **Nombre de la Rutina:**
-  
-      **Objetivo:** 
-  
-      **Calentamiento:** 
-  
-      **Ejercicios:**
-  
-      **1. Nombre del ejercicio (X series de X-X repeticiones)**
-  
-      * Descripción del ejercicio.
-  
-      **Estiramientos:** 
-  
-      **Frecuencia:** 
-  
-      **Descanso:** 
-  
-      **Progresión:** 
-  
-      **Consejos:**
+      ${this.prompt} 
   
       Los detalles del usuario son: joven de 24 años, mesomorfo, 174cm, 65kg, IMC 18.5 y hace ejercicio frecuentemente.
       `;

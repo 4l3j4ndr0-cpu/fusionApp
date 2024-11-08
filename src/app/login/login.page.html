@@ -13,20 +13,24 @@
   <div class="content">
   </div>
 <ion-list>
-  <ion-item>
-    <ion-input label="Usario"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-input label="Password">
-      <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-    </ion-input>
-  </ion-item>
-  <ion-item>
-    <a href="#">Forgot Password</a>
-  </ion-item>
-  <ion-item>
-    <ion-button expand="block">Ingresar</ion-button>
-  </ion-item>
+
+  <form (ngSubmit)="login()" [formGroup]="credentials">
+    <ion-item>
+      <ion-input type="email"  label="Usario"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="passwor" label="Password">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <a href="#">Forgot Password</a>
+    </ion-item>
+    <ion-item>
+      <ion-button type="submit" expand="block">Ingresar</ion-button>
+    </ion-item>
+  </form>
+
 </ion-list>
 
 </ion-card>
