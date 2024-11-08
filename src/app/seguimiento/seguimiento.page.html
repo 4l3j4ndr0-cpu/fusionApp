@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>seguimiento</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card >
+      <img alt="Silhouette of mountains" src="https://st4.depositphotos.com/3265223/24936/v/450/depositphotos_249366040-stock-illustration-fitness-gym-logo-with-strong.jpg" />
+      <ion-card-header>
+        <ion-card-title>Rastrea tu progreso, maximiza tus resultados.!</ion-card-title>
+        </ion-card-header>
+    
+      <ion-card-content>
+        <ion-list>
+          <ion-item>
+            <ion-datetime></ion-datetime>
+          </ion-item>
+          <ion-item>
+            <ion-select label="Tipo rutina" >
+              <ion-select-option value="Pecho">Pecho</ion-select-option>
+              <ion-select-option value="Espalda">Espalda</ion-select-option>
+              <ion-select-option value="hombros">Hombros</ion-select-option>
+              <ion-select-option value="Brazo">Brazo</ion-select-option>
+              <ion-select-option value="Core">Core</ion-select-option>
+              <ion-select-option value="Pierna">Pierna</ion-select-option>
+              <ion-select-option value="Cardio">Cardio</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-select label="Estado">
+              <ion-select-option value="a">Compltado</ion-select-option>
+              <ion-select-option value="b">No terminado</ion-select-option>
+              <ion-select-option value="c">Sin iniciar</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-input placeholder="Pulsaciones por segundo">
+              <br>
+          </ion-input>
+
+          <ion-item>
+            <ion-input placeholder="Peso actual"></ion-input>
+          </ion-item>
+
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </ion-card>
+</ion-content>

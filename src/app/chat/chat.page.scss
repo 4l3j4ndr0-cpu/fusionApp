@@ -1,0 +1,118 @@
+// .messages {
+//     display: flex;
+//     align-items: center;
+//     margin-bottom: 10px;
+//   }
+  
+//   .fa {
+//     margin-right: 10px;
+//     font-size: 20px;
+//   }
+  
+//   .bubble {
+//     padding: 15px 20px; /* Más espacio interno */
+//     border-radius: 20px; /* Bordes más redondeados */
+//     max-width: 80%;
+//     word-wrap: break-word;
+//     position: relative; /* Para agregar la sombra */
+//   }
+  
+//   .user-bubble {
+//     background-color: #e0f2f7; /* Color más claro */
+//     color: #333;
+//     margin-left: auto;
+//     box-shadow: -5px 5px 10px rgba(0, 0, 0, 0.1); /* Sombra a la izquierda */
+//   }
+  
+//   .bot-bubble {
+//     background-color: #d9edf7; /* Color más claro */
+//     color: #333;
+//     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1); /* Sombra a la derecha */
+//   }
+  
+//   .user-bubble::before {
+//     content: "";
+//     position: absolute;
+//     top: 10px;
+//     left: -15px;
+//     border-top: 10px solid transparent;
+//     border-bottom: 10px solid transparent;
+//     border-right: 15px solid #e0f2f7; /* Color de la punta */
+//   }
+  
+//   .bot-bubble::before {
+//     content: "";
+//     position: absolute;
+//     top: 10px;
+//     right: -15px;
+//     border-top: 10px solid transparent;
+//     border-bottom: 10px solid transparent;
+//     border-left: 15px solid #d9edf7; /* Color de la punta */
+//   }
+
+// //   .responses{
+// //     width: 20px;
+// //     display: flex;
+// //     flex-direction: column;
+// //     align-items: center;
+// //     justify-content: flex-end;
+// //   }
+
+.container1{
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  margin-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+}
+
+.text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.container2 {
+  display: flex;
+  align-items: center;
+  padding: 30px;
+  background-color:white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative; /* Para poder posicionar el borde inferior */
+}
+
+.container2::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px; /* Grosor del borde */
+  background-color: #ddd; /* Color del borde */
+}
+.container2:hover { /* Al pasar el cursor por encima */
+  background-color: #f2f2f2; /* Fondo gris */
+}
+
+// .container3 {
+//   padding-left: 25%;
+//}

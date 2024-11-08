@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>registro</ion-title>
+    <ion-back-button defaultHref="login" slot="start"></ion-back-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-img src="../../assets/icon/img/nutrimove.webp" class="background"></ion-img>
+    <div class="content">
+    </div>
+  <ion-list>
+    <ion-item>
+      <ion-input label="Nombre Usario"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Gamil"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Rut"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input label="Password">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+      <ion-item>
+      <ion-input label="Repeat Password">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+      </ion-item>
+    <ion-item>
+      <ion-button expand="block">Crear</ion-button>
+    </ion-item>
+  </ion-list>
+  
+  </ion-card>
+</ion-content>

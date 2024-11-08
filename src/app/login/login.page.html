@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      NutriMove
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+<ion-card>
+  <ion-img src="../../assets/icon/img/nutrimove.webp" class="background"></ion-img>
+  <div class="content">
+  </div>
+<ion-list>
+  <ion-item>
+    <ion-input label="Usario"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input label="Password">
+      <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+    </ion-input>
+  </ion-item>
+  <ion-item>
+    <a href="#">Forgot Password</a>
+  </ion-item>
+  <ion-item>
+    <ion-button expand="block">Ingresar</ion-button>
+  </ion-item>
+</ion-list>
+
+</ion-card>
+
+<div style="text-align: center;">
+  <p>
+    No tienes cuenta
+  </p>
+  <ion-button [routerLink]="['/registro']">Crear cuenta</ion-button>
+</div>  
+
+</ion-content>
