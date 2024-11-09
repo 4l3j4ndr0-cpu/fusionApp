@@ -17,10 +17,7 @@ export class LoginPage {
   email: string = '';
   password: string = '';
 
-  constructor(
-    private loginService: LoginService,
-    private router: Router
-  ) {}
+  constructor(private loginService: LoginService, private router: Router) {}
   async onLogin() {
     try {
       await this.loginService.login(this.email, this.password);

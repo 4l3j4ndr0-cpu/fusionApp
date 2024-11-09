@@ -1,5 +1,5 @@
 export class Usuario {
-  id_user: string = "";         
+  uid: string = "";         
   rut: string = "";             
   nombre_user: string = "";     
   contrasena: string = "";      
@@ -11,7 +11,7 @@ export class Usuario {
   estatura: number = 0;  
   mesotipo: string = "";         
   edad: number = 0;      
-  id_rol: number = 0;          
+  id_rol: number = 0;      
 }
 
 export class Ejercicio {

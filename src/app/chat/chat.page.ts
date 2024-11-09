@@ -1,21 +1,22 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
-import {Rutina, Ejercicio, Usuario} from '../services/modulos.service';
-import { Home1Page } from '../home1/home1.page';
+import { Rutina, Ejercicio, Usuario } from '../services/modulos.service';
+
 import { FormsModule } from '@angular/forms';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { GeminiService } from '../services/gemini.service';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DatabaseService } from '../services/database.service';
+import { LoginService } from '../services/login.service';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.page.html',
   styleUrls: ['./chat.page.scss'],
   standalone: true,
-  imports: [IonicModule,RouterLink,FormsModule,CommonModule,RouterOutlet,IonApp, IonRouterOutlet,Home1Page]
+  imports: [IonicModule, RouterLink, FormsModule, CommonModule, RouterOutlet, IonApp, IonRouterOutlet]
 })
 export class ChatPage {
   tittle = 'gemini-inte';
@@ -27,41 +28,62 @@ export class ChatPage {
   loading: boolean = false;
 
   chatHistory: any[] = [];
-  
+
   rutina: Rutina = new Rutina();
 
   Usuario: Usuario = new Usuario();
+  idUser: string | null = null;
 
-  constructor(private dbService: DatabaseService) { 
-    this.geminiService.getMessageHistory().subscribe((res) =>{
-      if(res) {
+  constructor(
+    private dbService: DatabaseService,
+    private LoginService: LoginService
+  ) { 
+    this.geminiService.getMessageHistory().subscribe((res) => {
+      if (res) {
         this.chatHistory.push(res);
       }
-    })
+    });
   }
 
   async onSubmit() {
-    try {
-      await this.dbService.insertRutina(this.rutina); 
-      console.log('Rutina y ejercicios insertados correctamente');
-    } catch (error) {
-      console.error('Error al insertar rutina y ejercicios:', error);
+    if (this.idUser) {
+      this.rutina.id_user = this.idUser;
+
+      try {
+        await this.dbService.insertRutina(this.rutina);
+        console.log('Rutina y ejercicios insertados correctamente');
+      } catch (error) {
+        console.error('Error al insertar rutina y ejercicios:', error);
+      }
+    } else {
+      console.error('Usuario no autenticado, no se puede insertar la rutina');
     }
   }
 
   async sendData() {
-    if (this.prompt && !this.loading) {
-      this.loading = true;
-      const usuarios = await this.dbService.getUsuarios();
-      const usuarioData = usuarios.length > 0 ? usuarios[0] : null;
+    this.idUser = this.LoginService.currentUserId;
+    if (!this.idUser) {
+      console.error('El UID del usuario no está disponible.');
+      return;
+    }
   
-      if (usuarioData) {
-        const peso = usuarioData['peso']; 
-        const estatura = usuarioData['estatura'];
-        const edad = usuarioData['edad'];
-        const mesotipo = usuarioData['mesotipo'];
-        const imc = this.calculateIMC(peso, estatura);
-        const data = `
+    try {
+      // Obtener los datos del usuario por UID
+      const usuario = await this.dbService.getUsuariosPorUid(this.idUser);
+  
+      if (!usuario) {
+        console.error('No se encontraron datos del usuario.');
+        return;
+      }
+  
+      // Accede directamente a los datos del usuario
+      const peso = usuario['peso'];
+      const estatura = usuario['estatura'];
+      const edad = usuario['edad'];
+      const mesotipo = usuario['mesotipo'];
+      const imc = this.calculateIMC(peso, estatura);
+  
+      const data = `
         ${this.prompt} siguiendo este formato:
         **Nombre de la Rutina:**
   
@@ -86,32 +108,30 @@ export class ChatPage {
         **Consejos:**
   
         Los detalles del usuario son: joven de ${edad} años, Somatotipo: (${mesotipo}), ${estatura}cm, ${peso}kg, IMC ${imc}.
-        `;
-        
-        try {
-          this.prompt = '';
-          const geminiResponse = await this.geminiService.generateText(data);
-          if (geminiResponse) {
-            this.rutina = this.processGeminiResponse(geminiResponse);
-            await this.onSubmit();
-          } else {
-            console.error('No se recibió respuesta de Gemini');
-          }
-        } catch (error) {
-          console.error('Error al obtener la rutina de Gemini:', error);
-        } finally {
-          this.loading = false;
+      `;
+  
+      try {
+        this.prompt = '';
+        const geminiResponse = await this.geminiService.generateText(data);
+        if (geminiResponse) {
+          this.rutina = this.processGeminiResponse(geminiResponse);
+          await this.onSubmit();
+        } else {
+          console.error('No se recibió respuesta de Gemini');
         }
-      } else {
-        console.error('No se encontraron los datos del usuario');
+      } catch (geminiError) {
+        console.error('Error al obtener la rutina de Gemini:', geminiError);
       }
+    } catch (error) {
+      console.error('Error al cargar los datos del usuario:', error);
     }
   }  
+
   calculateIMC(peso: number, estatura: number): number {
     const estaturaEnMetros = estatura / 100;
     return peso / (estaturaEnMetros * estaturaEnMetros);
   }
-  
+
   processGeminiResponse(response: string): Rutina {
     const rutina: Rutina = new Rutina();
   
@@ -169,5 +189,5 @@ export class ChatPage {
     const result = text.replaceAll('*', '');
     return result;
   }
- 
+
 }

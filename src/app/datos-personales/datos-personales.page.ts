@@ -5,6 +5,8 @@ import { Usuario } from '../services/modulos.service';
 import { DatabaseService } from '../services/database.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { LoginService } from '../services/login.service';
+
 @Component({
   selector: 'app-datos-personales',
   templateUrl: './datos-personales.page.html',
@@ -15,28 +17,31 @@ import { CommonModule } from '@angular/common';
 export class DatosPersonalesPage {
   user: Usuario = new Usuario();
   editMode: boolean = false;
-  userId: string = 'jnXzLdpM5gRVZWOX2Lqs';
+  idUser: string | null = null;
 
-  constructor(private dbService: DatabaseService) {}
+  constructor(private dbService: DatabaseService, private LoginService: LoginService) {}
 
   async ionViewWillEnter() {
+    this.idUser = this.LoginService.currentUserId;
     await this.loadUserData();
   }
   async loadUserData() {
     try {
-      const usuarios = await this.dbService.getUsuarios();
-      const userDoc = usuarios.find(usuario => usuario.id === this.userId);
-
-      if (userDoc) {
-        this.user = this.mapToUsuario(userDoc);
+      const usuario = await this.dbService.getUsuariosPorUid(this.idUser!);
+      if (usuario) {
+        this.user = this.mapToUsuario(usuario);
+      } else {
+        console.error('No se encontró el usuario con el UID proporcionado.');
       }
     } catch (error) {
       console.error('Error al cargar datos del usuario:', error);
     }
   }
+  
+  
   private mapToUsuario(data: any): Usuario {
     return {
-      id_user: data.id,  
+      uid: data.uid,  
       rut: data.rut || "",  
       nombre_user: data.nombre_user || "",
       contrasena: data.contrasena || "",
@@ -48,7 +53,7 @@ export class DatosPersonalesPage {
       estatura: data.estatura || 0,
       mesotipo: data.mesotipo || "",
       edad: data.edad || 0,
-      id_rol: data.id_rol || 0
+      id_rol: data.id_rol || 0,
     };
   }
   toggleEditMode() {
@@ -58,7 +63,7 @@ export class DatosPersonalesPage {
     if (!this.editMode) return; 
 
     try {
-      await this.dbService.updateUsuario({ ...this.user, id: this.userId });
+      await this.dbService.updateUsuario({ ...this.user, uid: this.idUser });
       console.log('Usuario modificado exitosamente');
       this.editMode = false;
     } catch (error) {
@@ -66,6 +71,3 @@ export class DatosPersonalesPage {
     }
   }
 }
-
-
-

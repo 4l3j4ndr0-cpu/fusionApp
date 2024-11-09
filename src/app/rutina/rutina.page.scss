@@ -1,0 +1,64 @@
+.rutina-card {
+    margin-bottom: 24px;
+    border-radius: 16px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #ffffff; /* Fondo blanco para mejor contraste */
+    transition: transform 0.2s;
+  }
+  
+  .rutina-card:hover {
+    transform: translateY(-5px); /* Efecto de elevación al pasar el mouse */
+  }
+  
+  ion-card-title {
+    font-size: 1.8rem;
+    color: #2a3d66; /* Azul oscuro para un toque profesional */
+    margin-bottom: 16px;
+  }
+  
+  ion-card-content p {
+    margin: 12px 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4a4a4a; /* Gris oscuro */
+  }
+  
+  strong {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #2a3d66; /* Azul oscuro */
+  }
+  
+  ion-icon {
+    margin-right: 6px;
+    color: #4a90e2; /* Azul claro */
+  }
+  
+  ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  li {
+    margin-bottom: 8px;
+  }
+  
+  /* Clases de colores para cada tarjeta */
+  .color1 {
+    background-color: #f8d7da; /* Color rojo claro */
+  }
+  
+  .color2 {
+    background-color: #d1ecf1; /* Color azul claro */
+  }
+  
+  .color3 {
+    background-color: #d4edda; /* Color verde claro */
+  }
+  
+  .color4 {
+    background-color: #fff3cd; /* Color amarillo claro */
+  }
+  

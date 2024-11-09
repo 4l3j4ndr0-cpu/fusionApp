@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, onAuthStateChanged, UserCredential } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, onAuthStateChanged, UserCredential, setPersistence, browserLocalPersistence } from '@angular/fire/auth';
 import { Firestore, collection, query, where, getDocs } from '@angular/fire/firestore';
 import { BehaviorSubject } from 'rxjs';
 
@@ -10,7 +10,17 @@ export class LoginService {
   private currentUserSubject = new BehaviorSubject<any>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private auth: Auth, private firestore: Firestore) {}
+  constructor(private auth: Auth, private firestore: Firestore) {
+    onAuthStateChanged(this.auth, async (user) => {
+      if (user) {
+        const userData = await this.getUserFromEmail(user.email!);
+        this.currentUserSubject.next(userData);
+      } else {
+        this.currentUserSubject.next(null);
+      }
+    });
+  }
+
   async login(email: string, password: string): Promise<boolean> {
     try {
       const userCredential: UserCredential = await signInWithEmailAndPassword(this.auth, email, password);
@@ -29,7 +39,7 @@ export class LoginService {
     }
   }
 
-  async getUserFromEmail(email: string): Promise<any> {
+  async getUserFromEmail(email: string): Promise<{ id: string; [key: string]: any } | null> {
     try {
       const q = query(collection(this.firestore, 'usuarios'), where('email', '==', email));
       const querySnapshot = await getDocs(q);
@@ -51,11 +61,7 @@ export class LoginService {
     });
   }
 
-  onAuthStateChanged(callback: (user: any) => void): void {
-    onAuthStateChanged(this.auth, callback);
-  }
-
-  getCurrentUser(): any {
-    return this.currentUserSubject.value;
+  get currentUserId(): string | null {
+    return this.auth.currentUser ? this.auth.currentUser.uid : null;
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, getDoc } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from '@angular/fire/firestore';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
-import { Usuario } from './modulos.service'; 
+
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +35,7 @@ export class DatabaseService {
       });
       console.log('Usuario insertado exitosamente en Firebase Authentication y Firestore');
     } catch (error) {
-      console.error('Error al insertar usuario:', error);
+      console.error('Error al insertar usuario: ${error.message}', error);
     }
   }
 
@@ -49,26 +49,60 @@ export class DatabaseService {
     }
   }
 
-  async updateUsuario(user: any) {
-    const usuarioData = {
-      nombre_user: user.nombre_user,
-      contrasena: user.contrasena,
-      email: user.email,
-      nombre: user.nombre,
-      apellido_pat: user.apellido_pat,
-      apellido_mat: user.apellido_mat,
-      peso: user.peso,
-      estatura: user.estatura,
-      mesotipo: user.mesotipo,
-      edad: user.edad,
-    };
-
+  async getUsuariosPorUid(uid: string): Promise<{ id: string; [key: string]: any } | null> {
     try {
-      const userRef = doc(this.firestore, 'usuarios', user.id);
-      await updateDoc(userRef, usuarioData);
-      console.log('Usuario actualizado');
+      const usuariosRef = collection(this.firestore, 'usuarios');
+      const q = query(usuariosRef, where('uid', '==', uid)); 
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        console.log('No se encontraron usuarios con ese UID');
+        return null;
+      }
+      const userDoc = snapshot.docs[0];
+      const userData = userDoc.data() as Record<string, any>;
+
+      return { id: userDoc.id, ...userData }; 
     } catch (error) {
-      console.error('Error al actualizar usuario:', error);
+      console.error('Error al obtener el usuario por UID:', error);
+      return null;
+    }
+  }
+  
+  async updateUsuario(user: any) {
+    try {
+      const usuariosRef = collection(this.firestore, 'usuarios');
+      const q = query(usuariosRef, where("uid", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          const userRef = doc.ref;
+          const usuarioData = {
+            nombre_user: user.nombre_user,
+            contrasena: user.contrasena,
+            email: user.email,
+            nombre: user.nombre,
+            apellido_pat: user.apellido_pat,
+            apellido_mat: user.apellido_mat,
+            peso: user.peso,
+            estatura: user.estatura,
+            mesotipo: user.mesotipo,
+            edad: user.edad,
+            uid: user.uid
+          };
+          updateDoc(userRef, usuarioData)
+            .then(() => {
+              console.log('Usuario actualizado');
+            })
+            .catch((error) => {
+              console.error('Error al actualizar el usuario:', error);
+            });
+        });
+      } else {
+        console.error('No se encontró el documento con el UID especificado');
+      }
+    } catch (error) {
+      console.error('Error al buscar el documento:', error);
     }
   }
 
@@ -82,39 +116,39 @@ export class DatabaseService {
   }
 
   // Tabla: rutina
-async insertRutina(rutina: any) {
-  const rutinaData = {
-    nombre_rutina: rutina.nombre_rutina,
-    objetivo: rutina.objetivo,
-    calentamiento: rutina.calentamiento,
-    estiramientos: rutina.estiramientos,
-    frecuencia: rutina.frecuencia,
-    descanso: rutina.descanso,
-    progresion: rutina.progresion,
-    consejos: rutina.consejos,
-    id_user: "108X40a4bQihIezXqhvk", 
-  };
-
-  try {
-    const rutinaRef = await addDoc(collection(this.firestore, 'rutinas'), rutinaData);
-    console.log('Rutina insertada correctamente');
-    const rutinaId = rutinaRef.id;
-    const ejerciciosRef = collection(this.firestore, `rutinas/${rutinaId}/ejercicios`);
-
-    for (const ejercicio of rutina.ejercicios) {
-      await addDoc(ejerciciosRef, {
-        nombre_ejercicio: ejercicio.nombre_ejercicio,
-        series: ejercicio.series,
-        repeticiones: ejercicio.repeticiones,
-        descripcion: ejercicio.descripcion,
-        id_rutina: rutinaId,  
-      });
+  async insertRutina(rutina: any) {
+    const rutinaData = {
+      nombre_rutina: rutina.nombre_rutina,
+      objetivo: rutina.objetivo,
+      calentamiento: rutina.calentamiento,
+      estiramientos: rutina.estiramientos,
+      frecuencia: rutina.frecuencia,
+      descanso: rutina.descanso,
+      progresion: rutina.progresion,
+      consejos: rutina.consejos,
+      id_user: rutina.id_user 
+    };
+  
+    try {
+      const rutinaRef = await addDoc(collection(this.firestore, 'rutinas'), rutinaData);
+      console.log('Rutina insertada correctamente');
+      const rutinaId = rutinaRef.id;
+      const ejerciciosRef = collection(this.firestore, 'rutinas/${rutinaId}/ejercicios');
+  
+      for (const ejercicio of rutina.ejercicios) {
+        await addDoc(ejerciciosRef, {
+          nombre_ejercicio: ejercicio.nombre_ejercicio,
+          series: ejercicio.series,
+          repeticiones: ejercicio.repeticiones,
+          descripcion: ejercicio.descripcion,
+          id_rutina: rutinaId,
+        });
+      }
+  
+      console.log('Ejercicios insertados correctamente');
+    } catch (error) {
+      console.error('Error al insertar rutina y ejercicios:', error);
     }
-
-    console.log('Ejercicios insertados correctamente');
-  } catch (error) {
-    console.error('Error al insertar rutina y ejercicios:', error);
-  }
 }
 async getRutinas(): Promise<{ id: string; [key: string]: any }[]> {
   try {

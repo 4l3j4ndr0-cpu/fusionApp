@@ -1,4 +1,4 @@
-<div class="ion-page">
+
   <ion-header>
     <ion-toolbar>
       <ion-title>Estadisticas</ion-title>
@@ -8,40 +8,39 @@
 
 
     <ion-card>
-      
-    <ion-list>
-      <ion-card>  
-        <ion-item button id="open-modal" expand="block">
-                  Peso
-                  64 KL
-        </ion-item>
+      <ion-list>
+        <ion-card>  
+          <ion-item button id="open-modal" expand="block">
+                    Peso
+                    64 KL
+          </ion-item>
+        </ion-card>
+        <ion-card>
+          <ion-item button id="open-modal" expand="block">
+                    IMC(Indice de Masa Corporal)
+                    18.5
+          </ion-item>
+        </ion-card>
+        <ion-card>
+          <ion-item button id="open-modal" expand="block">
+                    IMC(Indice de Masa Corporal)
+                    18.5
+          </ion-item>
+        </ion-card>
+        <ion-card>
+          <ion-item button id="open-modal" expand="block">
+                    % de Grasa
+                    13%
+          </ion-item>
+        </ion-card>
+        <ion-card>
+          <ion-item button id="open-modal" expand="block">
+                    Progreso de Rutina
+                    100%
+          </ion-item>
       </ion-card>
-      <ion-card>
-        <ion-item button id="open-modal" expand="block">
-                  IMC(Indice de Masa Corporal)
-                  18.5
-        </ion-item>
-      </ion-card>
-      <ion-card>
-        <ion-item button id="open-modal" expand="block">
-                  IMC(Indice de Masa Corporal)
-                  18.5
-        </ion-item>
-      </ion-card>
-      <ion-card>
-        <ion-item button id="open-modal" expand="block">
-                  % de Grasa
-                  13%
-        </ion-item>
-      </ion-card>
-      <ion-card>
-        <ion-item button id="open-modal" expand="block">
-                  Progreso de Rutina
-                  100%
-        </ion-item>
-     </ion-card>
-    </ion-list>
-  </ion-card>
+      </ion-list>
+    </ion-card>
     <ion-modal #modal trigger="open-modal" [presentingElement]="presentingElement">
       <ng-template>
         <ion-header>
@@ -61,4 +60,3 @@
       </ng-template>
     </ion-modal>
   </ion-content>
-</div>

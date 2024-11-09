@@ -26,7 +26,6 @@
     </div>
     </ng-container>
     <ng-container *ngIf="loading">
-      <app-home1></app-home1>
     </ng-container>
 </main>
 
@@ -35,7 +34,7 @@
 
 <footer class="chat-input">
 <ion-item>
-<ion-input type="text" id="message-input" (keyup.enter)="sendData()" placeholder="Type your message..." [(ngModel)]="prompt" [disabled]="loading" autocomplete="off"/>
-<ion-button id="send-button" (click)="sendData()"  [disabled]="loading">Send</ion-button>
+<ion-input type="text" id="message-input" (keyup.enter)="sendData()" placeholder="escribe un mensaje..." [(ngModel)]="prompt" [disabled]="loading" autocomplete="off"/>
+<ion-button id="send-button" (click)="sendData()"  [disabled]="loading">Enviar</ion-button>
 </ion-item>  
 </footer>
