@@ -48,4 +48,13 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () => import('./login/login.page').then(m => m.LoginPage),
   },
+  {
+    path: 'completar-perfil',
+    loadComponent: () => import('./completar-perfil/completar-perfil.page').then( m => m.CompletarPerfilPage)
+  },
+  {
+    path: 'completar-perfil',
+    loadComponent: () => import('./completar-perfil/completar-perfil.page').then(m => m.CompletarPerfilPage),
+  },
+
 ];

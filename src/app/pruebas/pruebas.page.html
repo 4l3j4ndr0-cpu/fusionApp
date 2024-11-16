@@ -1,35 +1,51 @@
-<ion-content>
+<ion-menu side="start" contentId="pruebas-content" menuId="main-menu">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menú</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <!-- Botón de Logout -->
+      <ion-item button (click)="confirmLogout()">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        Cerrar Sesión
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-content id="pruebas-content">
   <router-outlet></router-outlet>
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="home">
+        <ion-icon name="home"></ion-icon>
+        Home
+      </ion-tab-button>
+      <ion-tab-button tab="datos-personales">
+        <ion-icon name="document-text"></ion-icon>
+        Datos
+      </ion-tab-button>
+      <ion-tab-button tab="chat">
+        <ion-icon name="chatbox-ellipses"></ion-icon>
+        Chat
+      </ion-tab-button>
+      <ion-tab-button tab="rutina">
+        <ion-icon name="barbell"></ion-icon>
+        Rutina
+      </ion-tab-button>
+      <ion-tab-button tab="seguimiento">
+        <ion-icon name="calendar"></ion-icon>
+        Seguimiento
+      </ion-tab-button>
+      <ion-tab-button tab="estadistica">
+        <ion-icon name="analytics"></ion-icon>
+        Estadísticas
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
 </ion-content>
-
-    <ion-tabs>
-      <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="home">
-          <ion-icon name="home"></ion-icon>
-          Home
-        </ion-tab-button>
-        <ion-tab-button tab="datos-personales">
-          <ion-icon name="document-text"></ion-icon>
-          Datos 
-        </ion-tab-button>
-        <ion-tab-button tab="chat">
-          <ion-icon name="chatbox-ellipses"></ion-icon>
-          Chat
-        </ion-tab-button> 
-        <ion-tab-button tab="rutina">
-          <ion-icon name="barbell"></ion-icon>
-          Rutina
-        </ion-tab-button>     
-        <ion-tab-button tab="seguimiento">
-          <ion-icon name="calendar"></ion-icon>
-          seguimiento
-        </ion-tab-button>
-        <ion-tab-button tab="estadistica">
-          <ion-icon name="analytics"></ion-icon>
-          Estadisticas
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-tabs>
-
 
 

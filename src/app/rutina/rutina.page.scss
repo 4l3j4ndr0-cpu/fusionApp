@@ -62,3 +62,39 @@
     background-color: #fff3cd; /* Color amarillo claro */
   }
   
+  .icon-text {
+    display: flex;
+    align-items: center; /* Alinea verticalmente ícono y texto */
+    margin-bottom: 10px; /* Espaciado entre líneas */
+  
+    ion-icon {
+      font-size: 20px; /* Tamaño del ícono */
+      color: #007bff; /* Color del ícono */
+      margin-right: 10px; /* Espaciado entre ícono y texto */
+    }
+  
+    p {
+      margin: 0; /* Elimina márgenes extra del texto */
+      font-size: 14px; /* Tamaño de fuente */
+      color: #333; /* Color del texto */
+    }
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    gap: 20px; /* Espaciado entre columnas */
+  }
+  
+  .card-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaciado entre íconos y textos dentro de cada sección */
+  }
+
+  ion-card {
+    background: #ffe6e6; /* Fondo rosa claro */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 20px; /* Espaciado interno */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  }

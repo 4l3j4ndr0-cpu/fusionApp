@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc, setDoc } from '@angular/fire/firestore';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 
 
@@ -10,14 +10,18 @@ export class DatabaseService {
   constructor(private auth: Auth, private firestore: Firestore) {
     console.log('Conectado a Firestore');
   }
+
+  //Insertar usuarios con email y contraseña
   async insertUsuario(user: any) {
     try {
       const userCredential = await createUserWithEmailAndPassword(this.auth, user.email, user.contrasena);
       const uid = userCredential.user.uid;
+  
       const usuarioData = {
-        rut: user.rut,
+        uid,
+        rut: user.rut, // Tomado directamente del formulario
         nombre_user: user.nombre_user,
-        contrasena: user.contrasena, 
+        contrasena: user.contrasena,
         email: user.email,
         nombre: user.nombre,
         apellido_pat: user.apellido_pat,
@@ -26,16 +30,17 @@ export class DatabaseService {
         estatura: user.estatura,
         mesotipo: user.mesotipo,
         edad: user.edad,
-        id_rol: 2, 
+        id_rol: 2, // Rol por defecto
         fecha_registro: new Date(),
+        metodoRegistro: "email", // Indica el método de registro
       };
-      await addDoc(collection(this.firestore, 'usuarios'), {
-        ...usuarioData,
-        uid, 
-      });
-      console.log('Usuario insertado exitosamente en Firebase Authentication y Firestore');
+  
+      const userDocRef = doc(this.firestore, `usuarios/${uid}`);
+      await setDoc(userDocRef, usuarioData);
+      console.log("Usuario registrado correctamente");
     } catch (error) {
-      console.error('Error al insertar usuario: ${error.message}', error);
+      console.error("Error al registrar usuario:", error);
+      throw error;
     }
   }
 
@@ -51,58 +56,66 @@ export class DatabaseService {
 
   async getUsuariosPorUid(uid: string): Promise<{ id: string; [key: string]: any } | null> {
     try {
-      const usuariosRef = collection(this.firestore, 'usuarios');
-      const q = query(usuariosRef, where('uid', '==', uid)); 
-      const snapshot = await getDocs(q);
-      if (snapshot.empty) {
-        console.log('No se encontraron usuarios con ese UID');
+      const userDocRef = doc(this.firestore, `usuarios/${uid}`);
+      const userDocSnap = await getDoc(userDocRef);
+  
+      if (userDocSnap.exists()) {
+        console.log('Documento del usuario encontrado:', userDocSnap.data());
+        return { id: userDocSnap.id, ...userDocSnap.data() };
+      } else {
+        console.error('No se encontró el documento del usuario con el UID proporcionado.');
         return null;
       }
-      const userDoc = snapshot.docs[0];
-      const userData = userDoc.data() as Record<string, any>;
-
-      return { id: userDoc.id, ...userData }; 
     } catch (error) {
       console.error('Error al obtener el usuario por UID:', error);
       return null;
     }
   }
   
+  async updateUserProfile(uid: string, data: { rut: string; nombre_user: string }): Promise<void> {
+    try {
+      const userDocRef = doc(this.firestore, `usuarios/${uid}`);
+      await setDoc(userDocRef, data, { merge: true }); // Merge para actualizar solo campos específicos
+      console.log("Perfil del usuario actualizado correctamente");
+    } catch (error) {
+      console.error("Error al actualizar el perfil del usuario:", error);
+      throw error;
+    }
+  }
+
   async updateUsuario(user: any) {
     try {
-      const usuariosRef = collection(this.firestore, 'usuarios');
-      const q = query(usuariosRef, where("uid", "==", user.uid));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach((doc) => {
-          const userRef = doc.ref;
-          const usuarioData = {
-            nombre_user: user.nombre_user,
-            contrasena: user.contrasena,
-            email: user.email,
-            nombre: user.nombre,
-            apellido_pat: user.apellido_pat,
-            apellido_mat: user.apellido_mat,
-            peso: user.peso,
-            estatura: user.estatura,
-            mesotipo: user.mesotipo,
-            edad: user.edad,
-            uid: user.uid
-          };
-          updateDoc(userRef, usuarioData)
-            .then(() => {
-              console.log('Usuario actualizado');
-            })
-            .catch((error) => {
-              console.error('Error al actualizar el usuario:', error);
-            });
-        });
-      } else {
-        console.error('No se encontró el documento con el UID especificado');
+      const uid = user.uid; // Asegúrate de que uid esté definido correctamente.
+      if (!uid) {
+        throw new Error("UID no proporcionado");
       }
+  
+      const userDocRef = doc(this.firestore, `usuarios/${uid}`); // Referencia directa al documento del usuario
+  
+      // Filtrar los campos que son undefined
+      const usuarioData = Object.fromEntries(
+        Object.entries({
+          nombre_user: user.nombre_user,
+          contrasena: user.contrasena,
+          email: user.email,
+          nombre: user.nombre,
+          apellido_pat: user.apellido_pat,
+          apellido_mat: user.apellido_mat,
+          peso: user.peso,
+          estatura: user.estatura,
+          mesotipo: user.mesotipo,
+          edad: user.edad,
+          rut: user.rut,
+          uid: user.uid,
+        }).filter(([_, value]) => value !== undefined)
+      );
+  
+      // Actualizar el documento directamente
+      await setDoc(userDocRef, usuarioData, { merge: true });
+      console.log("Usuario actualizado correctamente");
     } catch (error) {
-      console.error('Error al buscar el documento:', error);
+      console.error("Error al actualizar el usuario:", error);
+      throw error;
     }
   }
 

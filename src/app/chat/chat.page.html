@@ -7,34 +7,39 @@
 </ion-header>
 
 <ion-content>
-
-<div class="chat-container">
-<main class="chat-history">
-  <ng-container *ngFor="let item of chatHistory">
-    <div class="messages" [ngClass]="{'blue': item.from === 'user', 'green': item.from === 'bot'}">
-      <i class="fa"
-        [ngClass]="{'fa-user-circle': item.from === 'user', 'fa-graduation-cap': item.from === 'bot'}"></i>
-      
-      <div class="fa">
-        <div class="bubble">
-          <div class="user-bubble">
-      
-            <span class="responses" [innerHTML]="formatText(item.message)" ></span>
+  <div class="chat-container">
+    <main class="chat-history">
+      <ng-container *ngFor="let item of chatHistory">
+        <div class="messages" [ngClass]="{'user-message': item.from === 'user', 'bot-message': item.from === 'bot'}">
+          <img
+            class="chat-avatar"
+            [src]="item.from === 'user' ? 'assets/user-icon.png' : 'assets/gemini-icon.png'"
+            alt="Avatar"
+          />
+          <div class="bubble">
+            <span [innerHTML]="formatText(item.message)"></span>
           </div>
         </div>
-      </div>  
-    </div>
-    </ng-container>
-    <ng-container *ngIf="loading">
-    </ng-container>
-</main>
-
-</div>
+      </ng-container>
+      <div *ngIf="loading" class="typing-indicator">
+        <img src="assets/gemini-icon.png" alt="Gemini Bot">
+        <span>Escribiendo...</span>
+      </div>
+    </main>
+  </div>
 </ion-content>
 
 <footer class="chat-input">
-<ion-item>
-<ion-input type="text" id="message-input" (keyup.enter)="sendData()" placeholder="escribe un mensaje..." [(ngModel)]="prompt" [disabled]="loading" autocomplete="off"/>
-<ion-button id="send-button" (click)="sendData()"  [disabled]="loading">Enviar</ion-button>
-</ion-item>  
+  <ion-item>
+    <ion-input
+      type="text"
+      id="message-input"
+      (keyup.enter)="sendData()"
+      placeholder="Escribe un mensaje..."
+      [(ngModel)]="prompt"
+      [disabled]="loading"
+      autocomplete="off"
+    />
+    <ion-button id="send-button" (click)="sendData()" [disabled]="loading">Enviar</ion-button>
+  </ion-item>
 </footer>

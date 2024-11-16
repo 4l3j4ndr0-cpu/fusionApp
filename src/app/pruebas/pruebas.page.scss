@@ -1,0 +1,85 @@
+/* Estilo general del menú */
+ion-menu {
+  --background: #f8f9fa; /* Color de fondo claro */
+  --width: 250px; /* Ancho del menú */
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+  
+  
+  ion-icon {
+    color: #007bff; /* Color de los iconos */
+  }
+
+  ion-alert {
+    --background: #ffffff; /* Fondo blanco */
+    --color: #333333; /* Color del texto */
+  }
+  
+  .yes-button {
+    --background: #007bff; /* Botón azul */
+    --color: #ffffff;
+  }
+  
+  .no-button {
+    --background: #ff3b30; /* Botón rojo */
+    --color: #ffffff;
+  }
+
+/* Estilo del encabezado del menú */
+ion-toolbar {
+  --background: #007bff; /* Color de fondo del encabezado */
+  color: white; /* Texto blanco */
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Lista de elementos */
+ion-list {
+  padding: 0;
+}
+
+/* Estilo de cada ítem del menú */
+ion-item {
+  --background: #ffffff; /* Fondo blanco */
+  --ripple-color: #007bff; /* Efecto ripple azul */
+  font-size: 16px;
+  color: #333; /* Texto oscuro */
+  border-bottom: 1px solid #e9ecef; /* Línea divisoria */
+}
+
+/* Íconos de los ítems */
+ion-item ion-icon {
+  color: #007bff; /* Color azul para los íconos */
+  margin-right: 10px;
+}
+
+/* Ítem al pasar el mouse */
+ion-item:hover {
+  --background: #e9ecef; /* Fondo gris claro */
+  cursor: pointer;
+}
+
+/* Botón de cerrar sesión */
+ion-item:last-child {
+  margin-top: 20px; /* Separación del último ítem */
+  font-weight: bold;
+  color: #dc3545; /* Color rojo para Cerrar Sesión */
+}
+
+/* Espaciado extra para un diseño limpio */
+ion-content {
+  padding: 10px 15px;
+}
+
+ion-header {
+  ion-toolbar {
+    --background: #007bff; /* Fondo azul */
+    --color: #ffffff; /* Texto blanco */
+    font-weight: bold; /* Negrita para el título */
+    text-align: center; /* Centrar el título */
+  }
+
+  ion-title {
+    font-size: 20px; /* Tamaño del texto */
+  }
+}

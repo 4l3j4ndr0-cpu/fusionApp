@@ -25,3 +25,16 @@
 #container a {
   text-decoration: none;
 }
+
+ion-header {
+  ion-toolbar {
+    --background: #007bff; /* Fondo azul */
+    --color: #ffffff; /* Texto blanco */
+    font-weight: bold; /* Negrita para el título */
+    text-align: center; /* Centrar el título */
+  }
+
+  ion-title {
+    font-size: 20px; /* Tamaño del texto */
+  }
+}

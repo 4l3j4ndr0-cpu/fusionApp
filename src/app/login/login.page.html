@@ -1,56 +1,102 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      NutriMove
-    </ion-title>
+    <ion-title>NutriMove</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-card>
-    <ion-img src="../../assets/icon/img/nutrimove.webp" class="background"></ion-img>
-    <div class="content">
-      <!-- Formulario de Login -->
-      <ion-list>
-        <!-- Campo de Correo Electrónico -->
-        <ion-item>
-          <ion-label position="floating">Correo Electrónico</ion-label>
-          <ion-input 
-            type="email" 
-            [(ngModel)]="email" 
-            required>
-          </ion-input>
-        </ion-item>
+    <div class="card-content">
+      <ion-img src="assets/icon/img/nutrimove.png" class="background"></ion-img>
+      <div class="content">
+        <!-- Mensaje de error general -->
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
 
-        <!-- Campo de Contraseña -->
-        <ion-item>
-          <ion-label position="floating">Contraseña</ion-label>
-          <ion-input 
-            type="password" 
-            [(ngModel)]="password" 
-            required>
-            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-          </ion-input>
-        </ion-item>
+        <!-- Formulario -->
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          <ion-list>
+            <!-- Campo de Correo Electrónico -->
+            <ion-item>
+              <ion-input
+                label="Correo Electrónico"
+                label-placement="floating"
+                fill="outline"
+                type="email"
+                formControlName="email"
+                placeholder="Ingresa tu correo"
+              ></ion-input>
+            </ion-item>
+            <ion-note
+              *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched"
+              class="error-note"
+            >
+              El correo electrónico es obligatorio.
+            </ion-note>
+            <ion-note
+              *ngIf="loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched"
+              class="error-note"
+            >
+              Ingresa un correo válido.
+            </ion-note>
 
-        <!-- Olvidaste la contraseña -->
-        <ion-item>
-          <a href="#">Olvidé mi contraseña</a>
-        </ion-item>
+            <!-- Campo de Contraseña -->
+            <ion-item>
+              <ion-input
+                label="Contraseña"
+                label-placement="floating"
+                fill="outline"
+                type="password"
+                formControlName="password"
+                placeholder="Ingresa tu contraseña"
+              >
+                <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+              </ion-input>
+            </ion-item>
+            <ion-note
+              *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched"
+              class="error-note"
+            >
+              La contraseña es obligatoria.
+            </ion-note>
 
-        <!-- Botón para iniciar sesión -->
-        <ion-item>
-          <ion-button expand="block" (click)="onLogin()">Ingresar</ion-button>
-        </ion-item>
-      </ion-list>
+            <!-- Olvidaste la contraseña -->
+            <ion-item lines="none" class="forgot-password">
+              <a href="#">Olvidé mi contraseña</a>
+            </ion-item>
+
+            <!-- Botón para iniciar sesión -->
+            <div class="button-container">
+              <ion-button expand="block" type="submit" [disabled]="loginForm.invalid">
+                Ingresar
+              </ion-button>
+            </div>
+
+            <!-- Separador -->
+            <div class="separator">
+              <hr />
+              <span class="circle">O</span>
+              <hr />
+            </div>
+
+            <!-- Botón de inicio de sesión con Google -->
+            <div class="button-container">
+              <ion-button expand="block" (click)="onLoginWithGoogle()" class="google-button">
+                <img src="assets/icon/img/google.png" alt="Google" class="google-icon" />
+                Iniciar sesión con Google
+              </ion-button>
+            </div>
+          </ion-list>
+        </form>
       </div>
-    </ion-card>
-
-    <!-- Enlace para crear cuenta -->
-    <div style="text-align: center;">
-      <p>No tienes cuenta</p>
-      <ion-button [routerLink]="['/registro']">Crear cuenta</ion-button>
     </div>
-  </ion-content>
+  </ion-card>
 
-
+  <!-- Enlace para crear cuenta -->
+  <div style="text-align: center; margin-top: 10px;">
+    <p>¿No tienes cuenta?</p>
+    <ion-button [routerLink]="['/registro']">Crear cuenta</ion-button>
+  </div>
+  <hr>
+</ion-content>

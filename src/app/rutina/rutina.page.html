@@ -11,13 +11,15 @@
         <ion-card-title>{{ rutina.nombre_rutina }}</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <p><ion-icon name="fitness-outline"></ion-icon> <strong>Objetivo:</strong> {{ rutina.objetivo }}</p>
-        <p><ion-icon name="walk-outline"></ion-icon> <strong>Calentamiento:</strong> {{ rutina.calentamiento }}</p>
-        <p><ion-icon name="body-outline"></ion-icon> <strong>Estiramientos:</strong> {{ rutina.estiramientos }}</p>
-        <p><ion-icon name="calendar-outline"></ion-icon> <strong>Frecuencia:</strong> {{ rutina.frecuencia }}</p>
-        <p><ion-icon name="bed-outline"></ion-icon> <strong>Descanso:</strong> {{ rutina.descanso }}</p>
-        <p><ion-icon name="trending-up-outline"></ion-icon> <strong>Progresión:</strong> {{ rutina.progresion }}</p>
-        <p><ion-icon name="bulb-outline"></ion-icon> <strong>Consejos:</strong> {{ rutina.consejos }}</p>
+        <div class="icon-text">
+          <p><ion-icon name="fitness-outline"></ion-icon><strong>Objetivo:</strong> {{ rutina.objetivo }}</p>
+          <p><ion-icon name="walk-outline"></ion-icon> <strong>Calentamiento:</strong> {{ rutina.calentamiento }}</p>
+          <p><ion-icon name="body-outline"></ion-icon> <strong>Estiramientos:</strong> {{ rutina.estiramientos }}</p>
+          <p><ion-icon name="calendar-outline"></ion-icon> <strong>Frecuencia:</strong> {{ rutina.frecuencia }}</p>
+          <p><ion-icon name="bed-outline"></ion-icon> <strong>Descanso:</strong> {{ rutina.descanso }}</p>
+          <p><ion-icon name="trending-up-outline"></ion-icon> <strong>Progresión:</strong> {{ rutina.progresion }}</p>
+          <p><ion-icon name="bulb-outline"></ion-icon> <strong>Consejos:</strong> {{ rutina.consejos }}</p>
+        </div>  
       </ion-card-content>
     </ion-card>
   </div>

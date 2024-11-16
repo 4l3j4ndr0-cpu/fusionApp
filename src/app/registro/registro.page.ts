@@ -15,6 +15,7 @@ import {Usuario} from '../services/modulos.service';
 export class RegistroPage {
   user: Usuario = new Usuario();
   repeatPassword: string = '';
+  
   constructor(private dbService: DatabaseService) {}
 
   async onSubmit() {

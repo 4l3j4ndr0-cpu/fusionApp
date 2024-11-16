@@ -25,6 +25,7 @@ export class DatosPersonalesPage {
     this.idUser = this.LoginService.currentUserId;
     await this.loadUserData();
   }
+  
   async loadUserData() {
     try {
       const usuario = await this.dbService.getUsuariosPorUid(this.idUser!);
