@@ -32,6 +32,7 @@ export class ChatPage {
   rutina: Rutina = new Rutina();
 
   Usuario: Usuario = new Usuario();
+  
   idUser: string | null = null;
 
   constructor(
@@ -44,7 +45,26 @@ export class ChatPage {
       }
     });
   }
-
+  async sendSimpleResponse() {
+    this.loading = true;
+    try {
+      const geminiResponse = await this.geminiService.generateText(this.prompt);
+      if (geminiResponse) {
+        this.chatHistory.push({
+          from: 'bot',
+          message: geminiResponse
+        });
+      } else {
+        console.error('No se recibió respuesta de Gemini');
+      }
+    } catch (error) {
+      console.error('Error al obtener la respuesta de Gemini:', error);
+    } finally {
+      this.loading = false;
+      this.prompt = ''; 
+    }
+  }
+  
   async onSubmit() {
     if (this.idUser) {
       this.rutina.id_user = this.idUser;
@@ -62,13 +82,147 @@ export class ChatPage {
 
   async sendData() {
     this.idUser = this.LoginService.currentUserId;
+    if (!this.prompt.trim()) {
+      console.error('El mensaje no puede estar vacío.');
+      return;
+    }
+    if (this.prompt.toLowerCase().includes('dame') || this.prompt.toLowerCase().includes('generar') || this.prompt.toLowerCase().includes('generame')) {
+      console.log('Generando rutina...');
+      await this.generateRutina();
+    } else if (this.prompt.toLowerCase().includes('cambiar') || this.prompt.toLowerCase().includes('modificar') || this.prompt.toLowerCase().includes('mejorar') || this.prompt.toLowerCase().includes('mejora') || this.prompt.toLowerCase().includes('modifica')) {
+      console.log('Actualizando rutina...');
+      await this.updateRutina();
+    } else {
+      console.log('Enviando respuesta simple...');
+      await this.sendSimpleResponse();
+    }
+  }
+  
+  async updateRutina() {
+    if (!this.idUser) {
+      console.error('Usuario no autenticado, no se puede actualizar la rutina');
+      return;
+    }
+    const rutinasGenericas = await this.dbService.getRutinasPorUsuario(this.idUser);
+    const rutinas: Rutina[] = rutinasGenericas.map(rutinaData => this.mapToRutina(rutinaData));
+  
+    if (!rutinas || rutinas.length === 0) {
+      console.error('No se encontraron rutinas almacenadas para este usuario.');
+      return;
+    }
+    const nombreRutinaUsuario = this.prompt.match(/"([^"]+)"/);
+    if (!nombreRutinaUsuario || !nombreRutinaUsuario[1]) {
+      console.error('No se proporcionó un nombre de rutina válido en el prompt.');
+      return;
+    }
+    const nombreRutina = nombreRutinaUsuario[1].trim().toLowerCase();
+    let rutinaSeleccionada = rutinas.find(rutina =>
+      rutina.nombre_rutina.toLowerCase() === nombreRutina
+    );
+  
+    if (!rutinaSeleccionada) {
+      console.error('No se encontró una rutina que coincida con el nombre proporcionado.');
+      console.log('Rutinas en la base de datos:', rutinas.map(rutina => rutina.nombre_rutina)); // Para depuración
+      return;
+    }
+  
+    const usuario = await this.dbService.getUsuariosPorUid(this.idUser);
+    if (!usuario) {
+      console.error('No se encontraron datos del usuario.');
+      return;
+    }
+    const peso = usuario['peso'];
+    const estatura = usuario['estatura'];
+    const edad = usuario['edad'];
+    const mesotipo = usuario['mesotipo'];
+    const imc = this.calculateIMC(peso, estatura);
+    const data = `
+      ${this.prompt}
+      Mejora la siguiente rutina:
+      
+      **Nombre de la Rutina:** ${rutinaSeleccionada.nombre_rutina}
+  
+      **Objetivo:** ${rutinaSeleccionada.objetivo}
+  
+      **Calentamiento:** ${rutinaSeleccionada.calentamiento}
+
+      **Estiramientos:** ${rutinaSeleccionada.estiramientos}
+  
+      **Frecuencia:** ${rutinaSeleccionada.frecuencia}
+  
+      **Descanso:** ${rutinaSeleccionada.descanso}
+  
+      **Progresión:** ${rutinaSeleccionada.progresion}
+  
+      **Consejos:** ${rutinaSeleccionada.consejos}
+  
+      Detalles del usuario:
+      - Edad: ${edad} años
+      - Peso: ${peso} kg
+      - Estatura: ${estatura} cm
+      - IMC: ${imc}
+      - Somatotipo: ${mesotipo}
+  
+      Genera una rutina mejorada siguiendo este formato:
+      **Nombre de la Rutina:**
+      **Objetivo:**
+      **Calentamiento:**
+      **Ejercicios:**
+      1. Nombre del ejercicio (X series de X-X repeticiones) - Descripción
+      **Estiramientos:**
+      **Frecuencia:**
+      **Descanso:**
+      **Progresión:**
+      **Consejos:**
+    `;
+  
+    try {
+      const geminiResponse = await this.geminiService.generateText(data);
+      if (geminiResponse) {
+        const rutinaActualizada = this.processGeminiResponse(geminiResponse);
+        const rutinaData = {
+          nombre_rutina: rutinaActualizada.nombre_rutina || rutinaSeleccionada.nombre_rutina || "Nombre no especificado",
+          id_user: this.idUser,
+          objetivo: rutinaActualizada.objetivo || rutinaSeleccionada.objetivo || "Objetivo no especificado",
+          calentamiento: rutinaActualizada.calentamiento || rutinaSeleccionada.calentamiento || "Calentamiento no especificado",
+          estiramientos: rutinaActualizada.estiramientos || rutinaSeleccionada.estiramientos || "Estiramientos no especificados",
+          frecuencia: rutinaActualizada.frecuencia || rutinaSeleccionada.frecuencia || "Frecuencia no especificada",
+          descanso: rutinaActualizada.descanso || rutinaSeleccionada.descanso || "Descanso no especificado",
+          progresion: rutinaActualizada.progresion || rutinaSeleccionada.progresion || "Progresión no especificada",
+          consejos: rutinaActualizada.consejos || rutinaSeleccionada.consejos || "Consejos no especificados",
+        };
+        await this.dbService.updateRutina(rutinaSeleccionada.nombre_rutina, rutinaSeleccionada, rutinaData);
+        console.log('Rutina actualizada correctamente en Firestore');
+      } else {
+        console.error('No se recibió respuesta de Gemini');
+      }
+    } catch (geminiError) {
+      console.error('Error al obtener la rutina de Gemini:', geminiError);
+    }
+  }
+  
+  private mapToRutina(data: any): Rutina {
+    return {
+      nombre_rutina: data.nombre_rutina || "",
+      objetivo: data.objetivo || "",
+      calentamiento: data.calentamiento || "",
+      ejercicios: data.ejercicios || [],
+      estiramientos: data.estiramientos || "",
+      frecuencia: data.frecuencia || "",
+      descanso: data.descanso || "",
+      progresion: data.progresion || "",
+      consejos: data.consejos || "",
+      id_user: data.id_user,
+    };
+  }
+  
+  async generateRutina() {
     if (!this.idUser) {
       console.error('El UID del usuario no está disponible.');
       return;
     }
   
     try {
-      // Obtener los datos del usuario por UID
       const usuario = await this.dbService.getUsuariosPorUid(this.idUser);
   
       if (!usuario) {
@@ -76,7 +230,6 @@ export class ChatPage {
         return;
       }
   
-      // Accede directamente a los datos del usuario
       const peso = usuario['peso'];
       const estatura = usuario['estatura'];
       const edad = usuario['edad'];
@@ -94,7 +247,6 @@ export class ChatPage {
         **Ejercicios:**
   
         **1. Nombre del ejercicio (X series de X-X repeticiones)**
-  
         * Descripción del ejercicio.
   
         **Estiramientos:** 
@@ -148,23 +300,25 @@ export class ChatPage {
     const ejerciciosRegex = /\*\*(\d+)\.\s*([A-Za-z\s]+)\s*\((\d+)\s*series\sde\s(\d+)-(\d+)\srepeticiones\)\*\*\s*-\s*([\s\S]*?)(?=\*\*\d+\.|$)/g;
     const ejerciciosMatches = [...response.matchAll(ejerciciosRegex)];
   
-    // Mapeo de los ejercicios a instancias de la clase Ejercicio
-    rutina.ejercicios = ejerciciosMatches.map(match => {
+    rutina.ejercicios = [];  // Asegúrate de que el array de ejercicios esté vacío antes de agregar nuevos ejercicios
+
+    ejerciciosMatches.forEach(match => {
       const nombre_ejercicio = match[2].trim();
       const series = parseInt(match[3], 10);
       const repeticiones = `${match[4]}-${match[5]}`;
       const descripcion = match[6].trim();
-  
-      // Crear una nueva instancia de Ejercicio y devolverla
+
+      // Crear una nueva instancia de Ejercicio
       const ejercicio = new Ejercicio();
       ejercicio.nombre_ejercicio = nombre_ejercicio;
       ejercicio.series = series;
       ejercicio.repeticiones = repeticiones;
       ejercicio.descripcion = descripcion;
-  
-      return ejercicio;
+
+      // Insertar el ejercicio en el array de ejercicios de la rutina
+      rutina.ejercicios.push(ejercicio);
     });
-  
+
     // Estiramientos
     const estiramientosRegex = /\*Estiramientos:\*\*(.*?)\*\*Frecuencia:\*/s;
     const estiramientosMatch = response.match(estiramientosRegex);

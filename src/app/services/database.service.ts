@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc, setDoc } from '@angular/fire/firestore';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
-
+import { Rutina } from './modulos.service';
 
 @Injectable({
   providedIn: 'root',
@@ -139,30 +139,17 @@ export class DatabaseService {
       descanso: rutina.descanso,
       progresion: rutina.progresion,
       consejos: rutina.consejos,
-      id_user: rutina.id_user 
+      id_user: rutina.id_user,
+      ejercicios: rutina.ejercicios 
     };
-  
+
     try {
-      const rutinaRef = await addDoc(collection(this.firestore, 'rutinas'), rutinaData);
+      await addDoc(collection(this.firestore, 'rutinas'), rutinaData);
       console.log('Rutina insertada correctamente');
-      const rutinaId = rutinaRef.id;
-      const ejerciciosRef = collection(this.firestore, 'rutinas/${rutinaId}/ejercicios');
-  
-      for (const ejercicio of rutina.ejercicios) {
-        await addDoc(ejerciciosRef, {
-          nombre_ejercicio: ejercicio.nombre_ejercicio,
-          series: ejercicio.series,
-          repeticiones: ejercicio.repeticiones,
-          descripcion: ejercicio.descripcion,
-          id_rutina: rutinaId,
-        });
-      }
-  
-      console.log('Ejercicios insertados correctamente');
     } catch (error) {
       console.error('Error al insertar rutina y ejercicios:', error);
     }
-}
+  }
 async getRutinas(): Promise<{ id: string; [key: string]: any }[]> {
   try {
     const snapshot = await getDocs(collection(this.firestore, 'rutinas'));
@@ -172,24 +159,71 @@ async getRutinas(): Promise<{ id: string; [key: string]: any }[]> {
     return [];
   }
 }
-  async updateRutina(rutina: any) {
-    const rutinaData = {
-      nombre_rutina: rutina.nombre_rutina,
-      descripcion: rutina.descripcion,
-      id_user: rutina.id_user, 
-      objetivo: rutina.objetivo,
-      ejercicios: rutina.ejercicios, 
-    };
-
-    try {
-      const rutinaRef = doc(this.firestore, 'rutinas', rutina.id);
-      await updateDoc(rutinaRef, rutinaData);
-      console.log('Rutina actualizada');
-    } catch (error) {
-      console.error('Error al actualizar rutina:', error);
-    }
+async getRutinasPorUsuario(userId: string): Promise<{ id: string; [key: string]: any }[]> {
+  try {
+    const q = query(
+      collection(this.firestore, 'rutinas'),
+      where('id_user', '==', userId) 
+    );
+    const snapshot = await getDocs(q); 
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Error al obtener rutinas del usuario:', error);
+    return []; 
   }
+}
+async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActualizada: any) {
+  const rutinaData = {
+    nombre_rutina: rutinaActualizada.nombre_rutina,
+    id_user: rutinaSeleccionada.id_user,
+    objetivo: rutinaActualizada.objetivo,
+    calentamiento: rutinaActualizada.calentamiento,
+    estiramientos: rutinaActualizada.estiramientos,
+    frecuencia: rutinaActualizada.frecuencia,
+    descanso: rutinaActualizada.descanso,
+    progresion: rutinaActualizada.progresion,
+    consejos: rutinaActualizada.consejos,
+  };
 
+  try {
+    // Verificar si el nombre de la rutina es válido
+    if (!nombreRutina) {
+      console.error('Nombre de rutina no válido');
+      return;
+    }
+
+    // Crear una referencia a la colección de rutinas
+    const rutinasRef = collection(this.firestore, 'rutinas');
+    
+    // Crear una consulta para buscar la rutina por su nombre
+    const q = query(rutinasRef, where('nombre_rutina', '==', nombreRutina));
+    
+    // Obtener los documentos que coinciden con el nombre
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      console.error('No se encontró una rutina con ese nombre');
+      return;
+    }
+
+    // Obtener el primer documento que coincida con el nombre
+    const rutinaDoc = querySnapshot.docs[0];
+
+    // Obtener el ID del documento
+    const rutinaId = rutinaDoc.id;
+
+    console.log('Actualizando rutina con nombre:', nombreRutina);
+
+    // Crear una referencia al documento de Firestore usando el ID de la rutina
+    const rutinaRef = doc(this.firestore, 'rutinas', rutinaId);
+
+    // Actualizar la rutina en la base de datos de Firestore
+    await updateDoc(rutinaRef, rutinaData);
+    console.log('Rutina actualizada correctamente');
+  } catch (error) {
+    console.error('Error al actualizar rutina:', error);
+  }
+}  
   async deleteRutina(id: string) {
     try {
       await deleteDoc(doc(this.firestore, 'rutinas', id));
