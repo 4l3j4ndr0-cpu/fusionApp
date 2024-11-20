@@ -1,62 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Estadísticas</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Estadisticas</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content class="ion-padding">
-
-
+<ion-content>
+  <div class="estadisticas-container">
     <ion-card>
-      <ion-list>
-        <ion-card>  
-          <ion-item button id="open-modal" expand="block">
-                    Peso
-                    64 KL
-          </ion-item>
-        </ion-card>
-        <ion-card>
-          <ion-item button id="open-modal" expand="block">
-                    IMC(Indice de Masa Corporal)
-                    18.5
-          </ion-item>
-        </ion-card>
-        <ion-card>
-          <ion-item button id="open-modal" expand="block">
-                    IMC(Indice de Masa Corporal)
-                    18.5
-          </ion-item>
-        </ion-card>
-        <ion-card>
-          <ion-item button id="open-modal" expand="block">
-                    % de Grasa
-                    13%
-          </ion-item>
-        </ion-card>
-        <ion-card>
-          <ion-item button id="open-modal" expand="block">
-                    Progreso de Rutina
-                    100%
-          </ion-item>
-      </ion-card>
-      </ion-list>
+      <ion-card-header>
+        <ion-card-title>Progreso Mensual</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Total de Sesiones:</strong> {{ totalSesionesMensuales }}</p>
+        <p><strong>Sesiones Completadas:</strong> {{ sesionesCompletadas }}</p>
+        <ion-progress-bar
+          [value]="porcentajeCompletado / 100"
+          color="success">
+        </ion-progress-bar>
+        <p><strong>Porcentaje Completado:</strong> {{ porcentajeCompletado | number:'1.0-2' }}%</p>
+      </ion-card-content>
     </ion-card>
-    <ion-modal #modal trigger="open-modal" [presentingElement]="presentingElement">
-      <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="end">
-              <ion-button (click)="modal.dismiss()">X</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content>
-          <ion-list>
-            <ion-item>
-              Resulto 
-            </ion-item>
-          </ion-list>
-        </ion-content>
-      </ng-template>
-    </ion-modal>
-  </ion-content>
+
+    <!-- Gráfico de Frecuencia Cardíaca Promedio por Día -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Frecuencia Cardíaca Promedio por Día</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div style="display: block; width: 100%; height: 300px;">
+          <canvas id="frecuenciaCardiacaDiariaCanvas"></canvas>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Gráfico de Frecuencia Cardíaca por Rutina -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Frecuencia Cardíaca Promedio por Rutina</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div style="display: block; width: 100%; height: 300px;">
+          <canvas id="frecuenciaCardiacaRutinaCanvas"></canvas>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+
+
+

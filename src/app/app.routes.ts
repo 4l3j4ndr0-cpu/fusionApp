@@ -28,7 +28,7 @@ export const routes: Routes = [
       },
       {
         path: 'estadistica',
-        loadComponent: () => import('./estadistica/estadistica.page').then(m => m.EstadisticaPage),
+        loadComponent: () => import('./estadistica/estadistica.page').then(m => m.EstadisticasPage),
       },
       {
         path: 'seguimiento',

@@ -10,3 +10,18 @@ ion-header {
       font-size: 20px; /* Tamaño del texto */
     }
   }
+  .estadisticas-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  ion-progress-bar {
+    margin-top: 10px;
+    width: 100%;
+    height: 20px;
+    border-radius: 10px;
+  }
+  
