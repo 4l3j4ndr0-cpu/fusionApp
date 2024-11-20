@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ion-header {
     ion-toolbar {
       --background: #007bff; /* Fondo azul */
@@ -26,3 +27,34 @@ ion-header {
     background-color: #ffffff; /* Opcional: fondo blanco */
   }
   
+=======
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Asegura que ocupe toda la altura del contenido */
+  padding: 16px; /* Espaciado interno opcional */
+  background: #f4f5f8; /* Color de fondo opcional */
+}
+
+.centered-card {
+  width: 100%;
+  max-width: 400px; /* Define un ancho máximo */
+  margin: auto; /* Centra el card horizontalmente */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destacar el card */
+  border-radius: 12px; /* Bordes redondeados */
+}
+
+.header-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.header-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px; /* Bordes redondeados para la imagen */
+}
+>>>>>>> 0e067d9ccbfeb38fd4d8bfeaa0ae65919d532154

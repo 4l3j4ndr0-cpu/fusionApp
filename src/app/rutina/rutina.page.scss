@@ -1,100 +1,38 @@
-.rutina-card {
-    margin-bottom: 24px;
-    border-radius: 16px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    background-color: #ffffff; /* Fondo blanco para mejor contraste */
-    transition: transform 0.2s;
-  }
-  
-  .rutina-card:hover {
-    transform: translateY(-5px); /* Efecto de elevación al pasar el mouse */
-  }
-  
-  ion-card-title {
-    font-size: 1.8rem;
-    color: #2a3d66; /* Azul oscuro para un toque profesional */
-    margin-bottom: 16px;
-  }
-  
-  ion-card-content p {
-    margin: 12px 0;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #4a4a4a; /* Gris oscuro */
-  }
-  
-  strong {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: bold;
-    color: #2a3d66; /* Azul oscuro */
-  }
-  
-  ion-icon {
-    margin-right: 6px;
-    color: #4a90e2; /* Azul claro */
-  }
-  
-  ul {
-    list-style-type: disc;
-    padding-left: 20px;
-  }
-  
-  li {
-    margin-bottom: 8px;
-  }
-  
-  /* Clases de colores para cada tarjeta */
-  .color1 {
-    background-color: #f8d7da; /* Color rojo claro */
-  }
-  
-  .color2 {
-    background-color: #d1ecf1; /* Color azul claro */
-  }
-  
-  .color3 {
-    background-color: #d4edda; /* Color verde claro */
-  }
-  
-  .color4 {
-    background-color: #fff3cd; /* Color amarillo claro */
-  }
-  
-  .icon-text {
-    display: flex;
-    align-items: center; /* Alinea verticalmente ícono y texto */
-    margin-bottom: 10px; /* Espaciado entre líneas */
-  
-    ion-icon {
-      font-size: 20px; /* Tamaño del ícono */
-      color: #007bff; /* Color del ícono */
-      margin-right: 10px; /* Espaciado entre ícono y texto */
-    }
-  
-    p {
-      margin: 0; /* Elimina márgenes extra del texto */
-      font-size: 14px; /* Tamaño de fuente */
-      color: #333; /* Color del texto */
-    }
-  }
 
-  .card-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
-    gap: 20px; /* Espaciado entre columnas */
-  }
-  
-  .card-grid > div {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Espaciado entre íconos y textos dentro de cada sección */
-  }
+.icon-text {
+  display: flex; /* Alinea el ícono y el título en la misma línea */
+  align-items: center; /* Alinea verticalmente ícono y título */
+  gap: 12px; /* Aumenta el espacio entre el ícono y el título */
+  margin-bottom: 4px; /* Espaciado inferior */
+}
 
-  ion-card {
-    background: #ffe6e6; /* Fondo rosa claro */
-    border-radius: 10px; /* Bordes redondeados */
-    padding: 20px; /* Espaciado interno */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-  }
+.icon-text ion-icon {
+  font-size: 30px; /* Tamaño del ícono */
+  color: #007bff; /* Color del ícono */
+  margin-top: 4px; /* Ajusta el ícono para que esté centrado con el texto */
+}
+
+.icon-text strong {
+  font-size: 16px; /* Tamaño del título */
+  color: #333; /* Color del título */
+}
+
+.icon-text ul {
+  list-style-type: disc; /* Puntos para listas */
+  padding-left: 20px; /* Sangría de listas */
+  margin: 0; /* Espaciado entre listas */
+}
+
+.icon-text li {
+  margin-bottom: 10px; /* Espaciado entre ítems de la lista */
+  line-height: 1.6; /* Espaciado claro entre líneas */
+  font-size: 14px;
+  color: #555;
+}
+
+.icon-text p {
+  margin: 4px 0;
+  font-size: 14px;
+  line-height: 1.6; /* Espaciado claro entre líneas */
+  color: #555;
+}

@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { Component } from '@angular/core';
+=======
+import { Component, OnInit } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+>>>>>>> 0e067d9ccbfeb38fd4d8bfeaa0ae65919d532154
 import { RouterLink } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';

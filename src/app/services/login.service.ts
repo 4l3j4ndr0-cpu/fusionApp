@@ -1,5 +1,5 @@
 import { Injectable, inject} from '@angular/core';
-import { Auth, signInWithEmailAndPassword, onAuthStateChanged, UserCredential, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Firestore, collection, query, where, getDocs, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';

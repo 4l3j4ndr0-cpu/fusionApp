@@ -10,23 +10,32 @@
   <div class="chat-container">
     <main class="chat-history">
       <ng-container *ngFor="let item of chatHistory">
-        <div class="messages" [ngClass]="{'user-message': item.from === 'user', 'bot-message': item.from === 'bot'}">
+        <div
+          class="messages"
+          [ngClass]="{'user-message': item.from === 'user', 'bot-message': item.from === 'bot'}"
+        >
+          <!-- Avatar -->
           <img
             class="chat-avatar"
-            [src]="item.from === 'user' ? 'assets/user-icon.png' : 'assets/gemini-icon.png'"
+            [src]="item.from === 'user' ? 'assets/icon/img/avatar.png' : 'assets/icon/img/google-gemini-icon.png'"
             alt="Avatar"
           />
+          <!-- Mensaje -->
           <div class="bubble">
             <span [innerHTML]="formatText(item.message)"></span>
           </div>
         </div>
       </ng-container>
       <div *ngIf="loading" class="typing-indicator">
-        <img src="assets/gemini-icon.png" alt="Gemini Bot">
+        <img src="assets/icon/img/google-gemini-icon.png" alt="Gemini Bot">
         <span>Escribiendo...</span>
       </div>
     </main>
   </div>
+  
+  <br>
+  <br>
+  <br>
 </ion-content>
 
 <footer class="chat-input">

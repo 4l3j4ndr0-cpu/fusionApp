@@ -1,51 +1,121 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Rutinas
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Rutinas</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="responsive-container">
+    <ion-header collapse="condense">
+      <ion-toolbar>
+        <ion-title size="large">Rutinas</ion-title>
+      </ion-toolbar>
+    </ion-header>
 
-  <div *ngIf="rutinas.length > 0">
-    <ion-card *ngFor="let rutina of rutinas; let i = index" [ngClass]="'color' + ((i % 4) + 1)" class="rutina-card">
-      <ion-card-header>
-        <ion-card-title>{{ rutina.nombre_rutina }}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <div class="icon-text">
-          <p><ion-icon name="fitness-outline"></ion-icon><strong>Objetivo:</strong> {{ rutina.objetivo }}</p>
-          <p><ion-icon name="walk-outline"></ion-icon> <strong>Calentamiento:</strong> {{ rutina.calentamiento }}</p>
-          <p><ion-icon name="body-outline"></ion-icon> <strong>Estiramientos:</strong> {{ rutina.estiramientos }}</p>
-          <p><ion-icon name="calendar-outline"></ion-icon> <strong>Frecuencia:</strong> {{ rutina.frecuencia }}</p>
-          <p><ion-icon name="bed-outline"></ion-icon> <strong>Descanso:</strong> {{ rutina.descanso }}</p>
-          <p><ion-icon name="trending-up-outline"></ion-icon> <strong>Progresión:</strong> {{ rutina.progresion }}</p>
-          <p><ion-icon name="bulb-outline"></ion-icon> <strong>Consejos:</strong> {{ rutina.consejos }}</p>
-          <p><strong>ejercicios</strong> {{ rutina.ejercicios }}</p>
-        </div>  
-      </ion-card-content>
-    </ion-card>
+    <div *ngIf="rutinas.length > 0">
+      <ion-card *ngFor="let rutina of rutinas" class="rutina-card">
+        <ion-card-header>
+          <ion-card-title>{{ rutina.nombre_rutina }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          
+          <!-- Objetivo -->
+          <div class="icon-text">
+            <div class="title-container">
+              <ion-icon name="fitness-outline"></ion-icon>
+              <strong>Objetivo:</strong>
+              <p>{{ rutina.objetivo }}</p>
+            </div>
+          </div>
+
+          <!-- Calentamiento -->
+          <div class="icon-text">
+            <div class="title-container">
+              <ion-icon name="walk-outline"></ion-icon>
+              <strong>Calentamiento:</strong>
+              <ul>
+                <li *ngFor="let item of rutina.calentamiento.split('•')">
+                  <span *ngIf="item.trim()">{{ item.trim() }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Estiramientos -->
+          <div class="icon-text">
+            <div class="title-container">
+              <ion-icon name="body-outline"></ion-icon>
+              <strong>Estiramientos:</strong>
+              <ul>
+                <li *ngFor="let item of rutina.estiramientos.split('•')">
+                  <span *ngIf="item.trim()">{{ item.trim() }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Frecuencia -->
+          <div class="icon-text">
+            <div class="title-container">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <strong>Frecuencia:</strong>
+              <ul>
+                <span>{{ rutina.frecuencia }}</span>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Descanso -->
+          <div class="icon-text">
+            <div class="title-container">
+              <ion-icon name="bed-outline"></ion-icon>
+              <strong>Descanso:</strong>
+              <ul>
+                <span>{{ rutina.descanso }}</span>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Progresión -->
+          <div class="icon-text">
+            <div class="title-container">
+              <ion-icon name="trending-up-outline"></ion-icon>
+              <strong>Progresión:</strong>
+              <ul>
+                <li *ngFor="let item of rutina.progresion.split('•')">
+                  <span *ngIf="item.trim()">{{ item.trim() }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Consejos -->
+          <div class="icon-text">
+            <div class="title-container">
+              <ion-icon name="bulb-outline"></ion-icon>
+              <strong>Consejos:</strong>
+              <ul>
+                <li *ngFor="let item of rutina.consejos.split('•')">
+                  <span *ngIf="item.trim()">{{ item.trim() }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <hr>
+          <ion-button color="danger" expand="full" (click)="deleteRutina(rutina.id)">
+            Eliminar
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div *ngIf="rutinas.length === 0">
+      <p>No se encontraron rutinas para este usuario.</p>
+    </div>
   </div>
-  
-  <div *ngIf="rutinas.length === 0">
-    <p>No se encontraron rutinas para este usuario.</p>
-  </div>
+  <footer>
+    <hr>
+  </footer>
 </ion-content>
-
-
-<!--
-      <div *ngIf="rutina.ejercicios.length > 0" class="ejercicios-list">
-        <h3>Ejercicios</h3>
-        <ion-list>
-          <ion-item *ngFor="let ejercicio of rutina.ejercicios">
-            <ion-label>
-              <h3>{{ ejercicio.nombre_ejercicio }}</h3>
-              <p>Series: {{ ejercicio.series }} - Repeticiones: {{ ejercicio.repeticiones }}</p>
-              <p>{{ ejercicio.descripcion }}</p>
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </div>
-      <div *ngIf="rutina.ejercicios.length === 0">
-        <p>No hay ejercicios asignados a esta rutina.</p>
-      </div>
-    -->
-

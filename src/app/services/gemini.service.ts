@@ -36,4 +36,3 @@ export class GeminiService {
     return this.messageHistory.asObservable();
   }
 }
-

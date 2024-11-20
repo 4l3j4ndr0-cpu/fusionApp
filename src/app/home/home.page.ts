@@ -3,7 +3,6 @@ import { IonicModule } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { Firestore, getDoc, doc, getDocs, where, collection, query} from '@angular/fire/firestore';
-import { LoginPage } from '../login/login.page';
 import { LoginService } from '../services/login.service';
 
 @Component({
@@ -22,16 +21,6 @@ export class HomePage implements OnInit {
     private firestore: Firestore,
     private loginService: LoginService,
     private router: Router) {}
-
-  
-
-    async ionViewWillEnter() {
-      const currentUser = await this.loginService.currentUser$.toPromise();
-      if (currentUser && (!currentUser.rut || !currentUser.nombre_user)) {
-        // Redirige a completar perfil si faltan rut o nombre_user
-        this.router.navigate(['/completar-perfil']);
-      }
-    }
 
   ngOnInit() {
     this.checkUserProfile();

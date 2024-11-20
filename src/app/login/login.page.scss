@@ -1,69 +1,130 @@
+/* Estilo general del contenedor principal */
 .card-content {
   padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px; /* Espacio entre secciones internas */
+  gap: 24px;
+  max-width: 400px;
+  margin: 0 auto;
+  height: 100%;
 }
 
+
+ion-input {
+  --border-color: transparent; /* Quita la línea */
+  --box-shadow: none; /* Elimina cualquier sombra inferior */
+  --border-width: 0; /* Elimina el ancho del borde */
+}
+
+/* Imagen del logo */
+ion-img.background {
+  width: 150px; /* Tamaño proporcional */
+  height: auto;
+  margin-bottom: 24px;
+}
+
+/* Lista de elementos del formulario */
 ion-list {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Espacio entre los elementos del formulario */
+  gap: 16px; /* Espaciado entre campos */
+  width: 100%;
 }
 
+/* Estilo de los campos (inputs) */
 ion-item {
-  margin-bottom: 12px; /* Espacio entre los inputs */
+  --border-radius: 8px; /* Bordes redondeados */
+  --padding-start: 12px; /* Espaciado interno */
+  --border-width: 0px; /* Ancho del borde */
+  --highlight-color-focused: transparent; /* Color de enfoque */
+  --padding-end: 12px;
 }
 
+/* Mensaje de error */
 ion-note.error-note {
-  color: red;
-  font-size: 12px;
-  margin-top: 8px; /* Espacio entre el input y el mensaje de error */
+  color: #e74c3c; /* Rojo para errores */
+  font-size: 12px; /* Tamaño más pequeño */
+  margin-top: 4px;
 }
 
-.button-container ion-button {
+/* Estilo de botones */
+.button-container ion-button,
+.google-button {
   margin-top: 16px;
-  width: 90%; /* Ajusta el ancho al 90% del contenedor */
-  max-width: 300px; /* Máximo ancho */
-  height: 48px; /* Altura */
-  font-size: 16px; /* Tamaño del texto */
+  width: 100%;
+  max-width: 300px;
+  height: 48px;
+  font-size: 16px;
+  border-radius: 8px; /* Bordes redondeados */
 }
 
 .google-button {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #4285f4; /* Color de Google */
   color: white;
   font-weight: bold;
-  border-radius: 4px;
-  padding: 8px 16px;
-  width: 90%;
-  max-width: 300px;
-  height: 48px;
-  font-size: 16px;
+  transition: all 0.3s ease; /* Transición suave */
 }
 
+.google-button:hover {
+  background-color: #357ae8; /* Color al pasar el mouse */
+}
+
+/* Icono de Google */
 .google-icon {
   width: 24px;
   height: 24px;
   margin-right: 8px;
 }
 
+/* Separador */
 .separator {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   margin: 16px 0;
-}
-
-.separator span {
-  font-size: 14px;
-  font-weight: bold;
+  color: #7f8c8d; /* Color suave */
 }
 
 .separator hr {
   height: 1px;
   background-color: #ccc;
+  border: none;
+  flex: 1;
 }
+
+/* Texto debajo del formulario */
+div {
+  text-align: center; /* Alineación centrada */
+  margin-top: 16px; /* Espaciado uniforme con los elementos superiores */
+}
+
+ion-button[routerLink] {
+  --background: #2ecc71; /* Botón verde */
+  --color: white;
+  --border-radius: 8px;
+  margin-top: 16px; /* Uniformidad con otros botones */
+  width: 100%; /* Alineación con el diseño general */
+  max-width: 300px; /* Tamaño similar a los otros botones */
+  height: 48px; /* Altura igual a los botones superiores */
+  font-size: 16px;
+}
+
+ion-button[routerLink]:hover {
+  --background: #27ae60; /* Cambia el color al pasar el mouse */
+}
+
+
+  /* Imagen Principal */
+  .header-image img {
+    width: 120px; /* Ancho fijo para móviles */
+    height: 120px; /* Altura fija */
+    object-fit: cover; /* Mantiene proporciones */
+    border-radius: 50%; /* Imagen circular */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+    margin-bottom: 16px;
+  }

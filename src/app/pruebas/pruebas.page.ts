@@ -1,10 +1,11 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, AlertController, MenuController } from '@ionic/angular';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { home, documentText, chatboxEllipses, barbell, calendar, analytics } from 'ionicons/icons';
 import { LoginService } from '../services/login.service';
+import { logOutOutline } from 'ionicons/icons';
 
 
 
@@ -15,6 +16,9 @@ import { LoginService } from '../services/login.service';
   standalone: true,
   imports: [ CommonModule, IonicModule, RouterLink, RouterModule]
 })
+
+
+
 export class PruebasPage implements OnInit {
 
   constructor(
@@ -29,7 +33,8 @@ export class PruebasPage implements OnInit {
       chatboxEllipses,
       calendar,
       barbell,
-      analytics
+      analytics,
+      logOutOutline
      });
    }
 
@@ -39,14 +44,6 @@ export class PruebasPage implements OnInit {
       this.router.navigate([`/pruebas/${path}`]);
     });
   }
-
-  async ionViewWillEnter() {
-    // Cierra el menú si está abierto
-    await this.menuController.close();
-    // Habilita el menú para que pueda usarse en esta página
-    await this.menuController.enable(true, 'main-menu');
-  }
-
   
    // Mostrar popup de confirmación antes de cerrar sesión
    async confirmLogout() {
@@ -86,6 +83,12 @@ export class PruebasPage implements OnInit {
     }
   }
 
+  onMenuWillClose() {
+    const activeElement = document.activeElement as HTMLElement;
+    if (activeElement) {
+      activeElement.blur(); // Quita el foco del elemento activo
+    }
+  }
 
   ngOnInit() {
   }
