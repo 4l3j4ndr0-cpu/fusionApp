@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc, setDoc } from '@angular/fire/firestore';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
-import { Rutina } from './modulos.service';
+import { Ejercicio, Rutina } from './modulos.service';
 
 @Injectable({
   providedIn: 'root',
@@ -130,6 +130,9 @@ export class DatabaseService {
 
   // Tabla: rutina
   async insertRutina(rutina: any) {
+    // Convierte cada ejercicio en JSON usando el método toJSON
+    const ejerciciosJSON = rutina.ejercicios.map((ejercicio: Ejercicio) => ejercicio.toJSON());
+  
     const rutinaData = {
       nombre_rutina: rutina.nombre_rutina,
       objetivo: rutina.objetivo,
@@ -140,9 +143,9 @@ export class DatabaseService {
       progresion: rutina.progresion,
       consejos: rutina.consejos,
       id_user: rutina.id_user,
-      ejercicios: rutina.ejercicios 
+      ejercicios: ejerciciosJSON, // Usa los objetos convertidos a JSON
     };
-
+  
     try {
       await addDoc(collection(this.firestore, 'rutinas'), rutinaData);
       console.log('Rutina insertada correctamente');
@@ -150,15 +153,18 @@ export class DatabaseService {
       console.error('Error al insertar rutina y ejercicios:', error);
     }
   }
-async getRutinas(): Promise<{ id: string; [key: string]: any }[]> {
-  try {
-    const snapshot = await getDocs(collection(this.firestore, 'rutinas'));
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  } catch (error) {
-    console.error('Error al obtener rutinas:', error);
-    return [];
+  
+  async getRutinas(): Promise<{ id: string; [key: string]: any }[]> {
+    try {
+      const snapshot = await getDocs(collection(this.firestore, 'rutinas'));
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+      console.error('Error al obtener rutinas:', error);
+      return [];
+    }
   }
-}
+
+
 async getRutinasPorUsuario(userId: string): Promise<{ id: string; [key: string]: any }[]> {
   try {
     const q = query(

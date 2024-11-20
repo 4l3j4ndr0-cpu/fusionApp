@@ -286,59 +286,60 @@ export class ChatPage {
   }
 
   processGeminiResponse(response: string): Rutina {
-    const rutina: Rutina = new Rutina();
-  
-    // Nombre de la Rutina
-    rutina.nombre_rutina = response.split('**Nombre de la Rutina:**')[1].trim().split('**Objetivo:**')[0].trim();
-  
-    // Objetivo
-    rutina.objetivo = response.split('**Objetivo:**')[1].trim().split('**Calentamiento:**')[0].trim();
-  
-    // Calentamiento
-    rutina.calentamiento = response.split('**Calentamiento:**')[1].trim().split('**Ejercicios:**')[0].trim();
-  
-    // Ejercicios
-    const ejerciciosRegex = /\*\*(\d+)\.\s*([A-Za-z\s]+)\s*\((\d+)\s*series\sde\s(\d+)-(\d+)\srepeticiones\)\*\*\s*-\s*([\s\S]*?)(?=\*\*\d+\.|$)/g;
-    const ejerciciosMatches = [...response.matchAll(ejerciciosRegex)];
-  
-    rutina.ejercicios = [];  // Asegúrate de que el array de ejercicios esté vacío antes de agregar nuevos ejercicios
+  const rutina: Rutina = new Rutina();
 
-    ejerciciosMatches.forEach(match => {
-      const nombre_ejercicio = match[2].trim();
-      const series = parseInt(match[3], 10);
-      const repeticiones = `${match[4]}-${match[5]}`;
-      const descripcion = match[6].trim();
+  // Nombre de la Rutina
+  rutina.nombre_rutina = response.split('**Nombre de la Rutina:**')[1].trim().split('**Objetivo:**')[0].trim();
 
-      // Crear una nueva instancia de Ejercicio
-      const ejercicio = new Ejercicio();
-      ejercicio.nombre_ejercicio = nombre_ejercicio;
-      ejercicio.series = series;
-      ejercicio.repeticiones = repeticiones;
-      ejercicio.descripcion = descripcion;
+  // Objetivo
+  rutina.objetivo = response.split('**Objetivo:**')[1].trim().split('**Calentamiento:**')[0].trim();
 
-      // Insertar el ejercicio en el array de ejercicios de la rutina
-      rutina.ejercicios.push(ejercicio);
-    });
+  // Calentamiento
+  rutina.calentamiento = response.split('**Calentamiento:**')[1].trim().split('**Ejercicios:**')[0].trim();
 
-    // Estiramientos
-    const estiramientosRegex = /\*Estiramientos:\*\*(.*?)\*\*Frecuencia:\*/s;
-    const estiramientosMatch = response.match(estiramientosRegex);
-    rutina.estiramientos = estiramientosMatch ? estiramientosMatch[1].trim() : '';
-  
-    // Frecuencia
-    rutina.frecuencia = response.split('**Frecuencia:**')[1].trim().split('**Descanso:**')[0].trim();
-  
-    // Descanso
-    rutina.descanso = response.split('**Descanso:**')[1].trim().split('**Progresión:**')[0];
-  
-    // Progresión
-    rutina.progresion = response.split('**Progresión:**')[1].trim().split('**Consejos:**')[0];
-  
-    // Consejos
-    rutina.consejos = response.split('**Consejos:**')[1].trim();
-  
-    return rutina;
-  }
+  // Ejercicios
+  const ejerciciosRegex = /\*\*(\d+)\.\s*([^\(]+)\((\d+)\s*series\sde\s(\d+)-(\d+)\srepeticiones\)\*\*\s*([\s\S]*?)(?=(\*\*\d+\.|$))/g;
+  const ejerciciosMatches = [...response.matchAll(ejerciciosRegex)];
+
+  rutina.ejercicios = []; // Aseguramos que los ejercicios están inicializados como un array vacío.
+
+  ejerciciosMatches.forEach(match => {
+    const nombre_ejercicio = match[2].trim();
+    const series = parseInt(match[3], 10);
+    const repeticiones = `${match[4]}-${match[5]}`;
+    const descripcion = match[6].trim().replace(/\*\s/g, ''); // Limpia los asteriscos de las descripciones.
+
+    // Crear una nueva instancia de Ejercicio
+    const ejercicio = new Ejercicio();
+    ejercicio.nombre_ejercicio = nombre_ejercicio;
+    ejercicio.series = series;
+    ejercicio.repeticiones = repeticiones;
+    ejercicio.descripcion = descripcion;
+
+    // Insertar el ejercicio en el array de ejercicios de la rutina
+    rutina.ejercicios.push(ejercicio);
+  });
+
+  // Estiramientos
+  const estiramientosRegex = /\*\*Estiramientos:\*\*(.*?)\*\*Frecuencia:\*/s;
+  const estiramientosMatch = response.match(estiramientosRegex);
+  rutina.estiramientos = estiramientosMatch ? estiramientosMatch[1].trim() : '';
+
+  // Frecuencia
+  rutina.frecuencia = response.split('**Frecuencia:**')[1].trim().split('**Descanso:**')[0].trim();
+
+  // Descanso
+  rutina.descanso = response.split('**Descanso:**')[1].trim().split('**Progresión:**')[0].trim();
+
+  // Progresión
+  rutina.progresion = response.split('**Progresión:**')[1].trim().split('**Consejos:**')[0].trim();
+
+  // Consejos
+  rutina.consejos = response.split('**Consejos:**')[1].trim();
+
+  return rutina;
+}
+
 
 
   formatText(message: string): string {

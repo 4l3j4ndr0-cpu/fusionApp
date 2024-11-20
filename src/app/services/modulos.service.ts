@@ -14,12 +14,8 @@ export class Usuario {
   id_rol: number = 0;      
 }
 
-export class Ejercicio {
-  nombre_ejercicio: string = "";
-  series: number = 0;
-  repeticiones: string = "";
-  descripcion: string = "";
-}
+
+
 
 export class Rutina {
   nombre_rutina: string = '';
@@ -49,3 +45,30 @@ export class Estadistica {
   id_user: string = '';
 }
 
+export class Ejercicio {
+  nombre_ejercicio: string;
+  series: number;
+  repeticiones: string;
+  descripcion: string;
+
+  constructor(
+    nombre_ejercicio: string = '',
+    series: number = 0,
+    repeticiones: string = '',
+    descripcion: string = ''
+  ) {
+    this.nombre_ejercicio = nombre_ejercicio;
+    this.series = series;
+    this.repeticiones = repeticiones;
+    this.descripcion = descripcion;
+  }
+
+  toJSON() {
+    return {
+      nombre_ejercicio: this.nombre_ejercicio,
+      series: this.series,
+      repeticiones: this.repeticiones,
+      descripcion: this.descripcion,
+    };
+  }
+}

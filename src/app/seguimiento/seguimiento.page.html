@@ -4,62 +4,66 @@
   </ion-toolbar>
 </ion-header>
 
+
 <ion-content class="ion-padding central-container">
-  <form (ngSubmit)="guardarSeguimiento()" class="form-container">
-    <!-- Fecha -->
-    <ion-item>
-      <ion-label position="stacked">Fecha</ion-label>
-      <ion-datetime
-        [(ngModel)]="seguimiento.fecha"
-        name="fecha"
-        presentation="date"
-      ></ion-datetime>
-    </ion-item>
+  <ion-card class="centered-card">
+    <form (ngSubmit)="guardarSeguimiento()" class="form-container">
+      <!-- Fecha -->
+      <ion-item>
+        <ion-label position="stacked">Fecha</ion-label>
+        <ion-datetime
+          [(ngModel)]="seguimiento.fecha"
+          name="fecha"
+          presentation="date"
+        ></ion-datetime>
+      </ion-item>
 
-    <!-- Rutina -->
-    <ion-item>
-      <ion-label position="stacked">Rutina</ion-label>
-      <ion-select
-        [(ngModel)]="seguimiento.tipoRutina"
-        name="tipoRutina"
-        placeholder="Seleccione una rutina"
-      >
-        <ion-select-option *ngFor="let rutina of rutinas" [value]="rutina.nombre_rutina">
-          {{ rutina.nombre_rutina }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
+      <!-- Rutina -->
+      <ion-item>
+        <ion-label position="stacked">Rutina</ion-label>
+        <ion-select
+          [(ngModel)]="seguimiento.tipoRutina"
+          name="tipoRutina"
+          placeholder="Seleccione una rutina"
+        >
+          <ion-select-option *ngFor="let rutina of rutinas" [value]="rutina.nombre_rutina">
+            {{ rutina.nombre_rutina }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
 
-    <!-- Estado -->
-    <ion-item>
-      <ion-label position="stacked">Estado</ion-label>
-      <ion-radio-group [(ngModel)]="seguimiento.estado" name="estado">
-        <ion-item>
-          <ion-label>Completada</ion-label>
-          <ion-radio slot="start" [value]="true"></ion-radio>
-        </ion-item>
-        <ion-item>
-          <ion-label>No completada</ion-label>
-          <ion-radio slot="start" [value]="false"></ion-radio>
-        </ion-item>
-      </ion-radio-group>
-    </ion-item>
+      <!-- Estado -->
+      <ion-item>
+        <ion-label position="stacked">Estado</ion-label>
+        <ion-radio-group [(ngModel)]="seguimiento.estado" name="estado">
+          <ion-item>
+            <ion-label>Completada</ion-label>
+            <ion-radio slot="start" [value]="true"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>No completada</ion-label>
+            <ion-radio slot="start" [value]="false"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-item>
 
-    <!-- Heart Rate -->
-    <ion-item>
-      <ion-label position="stacked">Heart Rate</ion-label>
-      <ion-input
-        type="number"
-        [(ngModel)]="seguimiento.heartRate"
-        name="heartRate"
-        placeholder="Ingrese su frecuencia cardíaca"
-      ></ion-input>
-    </ion-item>
+      <!-- Heart Rate -->
+      <ion-item>
+        <ion-label position="stacked">Heart Rate</ion-label>
+        <ion-input
+          type="number"
+          [(ngModel)]="seguimiento.heartRate"
+          name="heartRate"
+          placeholder="Ingrese su frecuencia cardíaca"
+        ></ion-input>
+      </ion-item>
 
-    <!-- Botón Guardar -->
-    <ion-button expand="block" type="submit" color="primary" class="submit-button">
-      Guardar Seguimiento
-    </ion-button>
-  </form>
+      <!-- Botón Guardar -->
+      <ion-button expand="block" type="submit" color="primary" class="submit-button">
+        Guardar Seguimiento
+      </ion-button>
+    </form>
+  </ion-card>
 </ion-content>
+
 

@@ -14,108 +14,114 @@
       </ion-toolbar>
     </ion-header>
 
-    <div *ngIf="rutinas.length > 0">
-      <ion-card *ngFor="let rutina of rutinas" class="rutina-card">
-        <ion-card-header>
-          <ion-card-title>{{ rutina.nombre_rutina }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          
-          <!-- Objetivo -->
-          <div class="icon-text">
-            <div class="title-container">
-              <ion-icon name="fitness-outline"></ion-icon>
-              <strong>Objetivo:</strong>
-              <p>{{ rutina.objetivo }}</p>
-            </div>
+    <ion-card *ngFor="let rutina of rutinas" class="rutina-card">
+      <ion-card-header>
+        <ion-card-title>{{ rutina.nombre_rutina }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+    
+        <!-- Objetivo -->
+        <div class="icon-text">
+          <div class="title-container">
+            <ion-icon name="fitness-outline"></ion-icon>
+            <strong>Objetivo:</strong>
+            <p>{{ rutina.objetivo }}</p>
           </div>
-
-          <!-- Calentamiento -->
-          <div class="icon-text">
-            <div class="title-container">
-              <ion-icon name="walk-outline"></ion-icon>
-              <strong>Calentamiento:</strong>
-              <ul>
-                <li *ngFor="let item of rutina.calentamiento.split('•')">
-                  <span *ngIf="item.trim()">{{ item.trim() }}</span>
-                </li>
-              </ul>
-            </div>
+        </div>
+    
+        <!-- Calentamiento -->
+        <div class="icon-text">
+          <div class="title-container">
+            <ion-icon name="walk-outline"></ion-icon>
+            <strong>Calentamiento:</strong>
+            <ul>
+              <li *ngFor="let item of rutina.calentamiento.split('•')">
+                <span *ngIf="item.trim()">{{ item.trim() }}</span>
+              </li>
+            </ul>
           </div>
-
-          <!-- Estiramientos -->
-          <div class="icon-text">
-            <div class="title-container">
-              <ion-icon name="body-outline"></ion-icon>
-              <strong>Estiramientos:</strong>
-              <ul>
-                <li *ngFor="let item of rutina.estiramientos.split('•')">
-                  <span *ngIf="item.trim()">{{ item.trim() }}</span>
-                </li>
-              </ul>
-            </div>
+        </div>
+    
+        <!-- Ejercicios -->
+        <div class="icon-text">
+          <div class="title-container">
+            <ion-icon name="barbell-outline"></ion-icon>
+            <strong>Ejercicios:</strong>
+            <ul>
+              <li *ngFor="let ejercicio of rutina.ejercicios">
+                <strong>{{ ejercicio.nombre_ejercicio }}</strong> 
+                <p>{{ ejercicio.series }} series de {{ ejercicio.repeticiones }} repeticiones</p>
+                <p>{{ ejercicio.descripcion }}</p>
+              </li>
+            </ul>
           </div>
-
-          <!-- Frecuencia -->
-          <div class="icon-text">
-            <div class="title-container">
-              <ion-icon name="calendar-outline"></ion-icon>
-              <strong>Frecuencia:</strong>
-              <ul>
-                <span>{{ rutina.frecuencia }}</span>
-              </ul>
-            </div>
+        </div>
+    
+        <!-- Estiramientos -->
+        <div class="icon-text">
+          <div class="title-container">
+            <ion-icon name="body-outline"></ion-icon>
+            <strong>Estiramientos:</strong>
+            <ul>
+              <li *ngFor="let item of rutina.estiramientos.split('•')">
+                <span *ngIf="item.trim()">{{ item.trim() }}</span>
+              </li>
+            </ul>
           </div>
-
-          <!-- Descanso -->
-          <div class="icon-text">
-            <div class="title-container">
-              <ion-icon name="bed-outline"></ion-icon>
-              <strong>Descanso:</strong>
-              <ul>
-                <span>{{ rutina.descanso }}</span>
-              </ul>
-            </div>
+        </div>
+    
+        <!-- Frecuencia -->
+        <div class="icon-text">
+          <div class="title-container">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <strong>Frecuencia:</strong>
+            <ul>
+              <span>{{ rutina.frecuencia }}</span>
+            </ul>
           </div>
-
-          <!-- Progresión -->
-          <div class="icon-text">
-            <div class="title-container">
-              <ion-icon name="trending-up-outline"></ion-icon>
-              <strong>Progresión:</strong>
-              <ul>
-                <li *ngFor="let item of rutina.progresion.split('•')">
-                  <span *ngIf="item.trim()">{{ item.trim() }}</span>
-                </li>
-              </ul>
-            </div>
+        </div>
+    
+        <!-- Descanso -->
+        <div class="icon-text">
+          <div class="title-container">
+            <ion-icon name="bed-outline"></ion-icon>
+            <strong>Descanso:</strong>
+            <ul>
+              <span>{{ rutina.descanso }}</span>
+            </ul>
           </div>
-
-          <!-- Consejos -->
-          <div class="icon-text">
-            <div class="title-container">
-              <ion-icon name="bulb-outline"></ion-icon>
-              <strong>Consejos:</strong>
-              <ul>
-                <li *ngFor="let item of rutina.consejos.split('•')">
-                  <span *ngIf="item.trim()">{{ item.trim() }}</span>
-                </li>
-              </ul>
-            </div>
+        </div>
+    
+        <!-- Progresión -->
+        <div class="icon-text">
+          <div class="title-container">
+            <ion-icon name="trending-up-outline"></ion-icon>
+            <strong>Progresión:</strong>
+            <ul>
+              <li *ngFor="let item of rutina.progresion.split('•')">
+                <span *ngIf="item.trim()">{{ item.trim() }}</span>
+              </li>
+            </ul>
           </div>
-
-          <hr>
-          <ion-button color="danger" expand="full" (click)="deleteRutina(rutina.id)">
-            Eliminar
-          </ion-button>
-        </ion-card-content>
-      </ion-card>
-    </div>
-    <div *ngIf="rutinas.length === 0">
-      <p>No se encontraron rutinas para este usuario.</p>
-    </div>
-  </div>
-  <footer>
-    <hr>
-  </footer>
-</ion-content>
+        </div>
+    
+        <!-- Consejos -->
+        <div class="icon-text">
+          <div class="title-container">
+            <ion-icon name="bulb-outline"></ion-icon>
+            <strong>Consejos:</strong>
+            <ul>
+              <li *ngFor="let item of rutina.consejos.split('•')">
+                <span *ngIf="item.trim()">{{ item.trim() }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+    
+        <hr>
+        <ion-button color="danger" expand="full" (click)="deleteRutina(rutina.id)">
+          Eliminar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+    

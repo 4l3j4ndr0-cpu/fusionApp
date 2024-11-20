@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DatabaseService } from '../services/database.service';
 import { LoginService } from '../services/login.service';
 import { IonicModule } from '@ionic/angular';
-import { fitnessOutline, walkOutline, bodyOutline, calendarOutline, bedOutline, trendingUpOutline, bulbOutline } from 'ionicons/icons';
+import { fitnessOutline, walkOutline, bodyOutline, calendarOutline, bedOutline, trendingUpOutline, bulbOutline, barbellOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
 @Component({
@@ -26,7 +26,8 @@ export class RutinaPage {
       calendarOutline,
       bedOutline,
       trendingUpOutline,
-      bulbOutline
+      bulbOutline,
+      barbellOutline
     });
   
      }
