@@ -127,7 +127,7 @@ export class DatabaseService {
       console.error('Error al eliminar usuario:', error);
     }
   }
-
+//--------------------------------------------------------------------------------------------------
   // Tabla: rutina
   async insertRutina(rutina: any) {
     const rutinaData = {
@@ -150,6 +150,10 @@ export class DatabaseService {
       console.error('Error al insertar rutina y ejercicios:', error);
     }
   }
+
+//--------------------------------------------------------------------------------------------------
+//                  CRUD Rutinas
+// Obtener todas las rutinas
 async getRutinas(): Promise<{ id: string; [key: string]: any }[]> {
   try {
     const snapshot = await getDocs(collection(this.firestore, 'rutinas'));
@@ -159,6 +163,7 @@ async getRutinas(): Promise<{ id: string; [key: string]: any }[]> {
     return [];
   }
 }
+// Obtener Rutina por el usuario
 async getRutinasPorUsuario(userId: string): Promise<{ id: string; [key: string]: any }[]> {
   try {
     const q = query(
@@ -172,6 +177,7 @@ async getRutinasPorUsuario(userId: string): Promise<{ id: string; [key: string]:
     return []; 
   }
 }
+// Actualizar Rutina
 async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActualizada: any) {
   const rutinaData = {
     nombre_rutina: rutinaActualizada.nombre_rutina,
@@ -224,6 +230,7 @@ async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActua
     console.error('Error al actualizar rutina:', error);
   }
 }  
+// Borrar Rutina
   async deleteRutina(id: string) {
     try {
       await deleteDoc(doc(this.firestore, 'rutinas', id));
@@ -232,7 +239,7 @@ async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActua
       console.error('Error al eliminar rutina:', error);
     }
   }
-
+//--------------------------------------------------------------------------------------------------
   // Tabla: estadisticas
   // Tabla: estadisticas
   /*async insertEstadistica(estadistica: any) {
@@ -261,6 +268,11 @@ async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActua
         console.error('Error al insertar estadística:', error);
       }
     }*/
+
+
+  //--------------------------------------------------------------------------------------------------
+  //                        CRUD Estadistica    
+  // insertar estadistica
   async insertEstadistica(estadistica: any) {
     const estadisticaData = {
       date_recorded: estadistica.date_recorded,
@@ -280,7 +292,7 @@ async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActua
       console.error('Error al insertar estadística:', error);
     }
   }
-
+  // Solicitar estadistica
   async getEstadisticas(): Promise<{ id: string; [key: string]: any }[]> {
     try {
       const snapshot = await getDocs(collection(this.firestore, 'estadisticas'));
@@ -290,7 +302,7 @@ async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActua
       return []; 
     }
   }
-
+  // Actualizar estadistica
   async updateEstadistica(estadistica: any) {
     const estadisticaData = {
       date_recorded: estadistica.date_recorded,
@@ -311,7 +323,7 @@ async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActua
       console.error('Error al actualizar estadística:', error);
     }
   }
-
+  // Borrar estadistica
   async deleteEstadistica(id: string) {
     try {
       await deleteDoc(doc(this.firestore, 'estadisticas', id));
@@ -320,7 +332,7 @@ async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActua
       console.error('Error al eliminar estadística:', error);
     }
   }
-
+//--------------------------------------------------------------------------------------------------
   // Tabla: soporte
   /*async insertSoporte(soporte: any) {
     const soporteData = {

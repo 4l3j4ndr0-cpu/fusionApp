@@ -10,3 +10,13 @@ ion-header {
       font-size: 20px; /* Tamaño del texto */
     }
   }
+
+  /* Imagen Principal */
+.header-image img {
+  width: 120px; /* Ancho fijo para móviles */
+  height: 120px; /* Altura fija */
+  object-fit: cover; /* Mantiene proporciones */
+  border-radius: 50%; /* Imagen circular */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+  margin-bottom: 16px;
+}

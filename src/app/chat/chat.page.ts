@@ -45,6 +45,7 @@ export class ChatPage {
       }
     });
   }
+
   async sendSimpleResponse() {
     this.loading = true;
     try {
@@ -64,7 +65,7 @@ export class ChatPage {
       this.prompt = ''; 
     }
   }
-  
+
   async onSubmit() {
     if (this.idUser) {
       this.rutina.id_user = this.idUser;
@@ -339,9 +340,18 @@ export class ChatPage {
     return rutina;
   }
 
-  formatText(text: string) {
-    const result = text.replaceAll('*', '');
-    return result;
-  }
+
+  formatText(message: string): string {
+  return message
+    // Convierte **texto** en <strong>texto</strong>
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // Convierte líneas con * al inicio en elementos <li>
+    .replace(/^\* (.+)$/gm, '<li>$1</li>')
+    // Añade <ul> antes y después de listas
+    .replace(/(<li>.+?<\/li>)/gms, '<ul>$1</ul>')
+    // Reemplaza saltos de línea con <br> solo si no son parte de una lista
+    .replace(/(?<!<\/li>)\n/g, '<br>');
+}
+
 
 }

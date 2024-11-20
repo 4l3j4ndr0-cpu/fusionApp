@@ -52,9 +52,4 @@ export const routes: Routes = [
     path: 'completar-perfil',
     loadComponent: () => import('./completar-perfil/completar-perfil.page').then( m => m.CompletarPerfilPage)
   },
-  {
-    path: 'completar-perfil',
-    loadComponent: () => import('./completar-perfil/completar-perfil.page').then(m => m.CompletarPerfilPage),
-  },
-
 ];

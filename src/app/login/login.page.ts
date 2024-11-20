@@ -17,6 +17,7 @@ import { IonicModule, MenuController } from '@ionic/angular';
 export class LoginPage {
   loginForm: FormGroup;
   errorMessage: string | null = null;
+  isLoading = false;
 
   constructor(
     private loginService: LoginService,
@@ -53,23 +54,16 @@ export class LoginPage {
 
    //Inicio de sesión con google función asincrona para 
    async onLoginWithGoogle() {
+    console.time('LoginWithGoogle');
+    this.isLoading = true;
     try {
-      await this.loginService.loginWithGoogle();
-      console.log("Inicio de sesión exitoso con Google");
-      this.router.navigate(['/pruebas/home']); // Redirige al usuario a otra página
+      const result = await this.loginService.loginWithGoogle();
+      this.router.navigate(['/pruebas/home']);
     } catch (error) {
-      console.error("Error al iniciar sesión con Google:", error);
+      console.error("Error en inicio de sesión con Google:", error);
+    } finally {
+      console.timeEnd('LoginWithGoogle')
+      this.isLoading = false;
     }
-  }
-
-
-  // Desactiva el menú en la página de inicio de sesión
-  ionViewWillEnter() {
-    this.menuController.enable(false, 'mainMenu');
-  }
-
-  // Reactiva el menú al salir de la página de inicio de sesión
-  ionViewWillLeave() {
-    this.menuController.enable(true, 'mainMenu');
   }
 }

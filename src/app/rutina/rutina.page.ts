@@ -31,27 +31,52 @@ export class RutinaPage {
   
      }
 
-  async ionViewWillEnter() {
-    this.idUser = this.LoginService.currentUserId;
-    await this.loadUserData();
-  }
-  async loadUserData() {
-    try {
+     async ionViewWillEnter() {
       this.idUser = this.LoginService.currentUserId;
-
-      if (this.idUser == null) {
-        console.error('Usuario no autenticado');
-        return;
+      await this.loadUserData();
+    }
+  
+    async loadUserData() {
+      try {
+        this.idUser = this.LoginService.currentUserId;
+  
+        if (this.idUser == null) {
+          console.error('Usuario no autenticado');
+          return;
+        }
+  
+        const todasRutinas = await this.dbService.getRutinas();
+        this.rutinas = todasRutinas
+          .filter(rutina => rutina['id_user'] === this.idUser)
+          .map(rutina => this.formatRutina(rutina));
+  
+        if (this.rutinas.length === 0) {
+          console.error('No se encontraron rutinas para el usuario');
+        }
+      } catch (error) {
+        console.error('Error al cargar las rutinas:', error);
       }
+    }
+  
+    // Función para reemplazar '*' con puntos o guiones
+    formatRutina(rutina: any) {
+      const formattedRutina = { ...rutina };
+      ['onjetivo', 'frecuencia', 'descanso', 'calentamiento', 'estiramientos', 'progresion', 'consejos'].forEach(key => {
+        if (typeof formattedRutina[key] === 'string') {
+          formattedRutina[key] = formattedRutina[key].replace(/\*/g, '•');
+        }
+      });
+      return formattedRutina;
+    }
 
-      const todasRutinas = await this.dbService.getRutinas();
-      this.rutinas = todasRutinas.filter(rutina => rutina['id_user'] === this.idUser);
-
-      if (this.rutinas.length === 0) {
-        console.error('No se encontraron rutinas para el usuario');
+  // Borrar Rutina
+    async deleteRutina(id: string) {
+      try {
+        await this.dbService.deleteRutina(id);
+        this.rutinas = this.rutinas.filter(rutina => rutina.id !== id);
+        console.log('Rutina eliminada');
+      } catch (error) {
+        console.error('Error al eliminar rutina:', error);
       }
-    } catch (error) {
-      console.error('Error al cargar las rutinas:', error);
     }
   }
-}
