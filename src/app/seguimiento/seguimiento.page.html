@@ -1,48 +1,65 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>seguimiento</ion-title>
+    <ion-title>Seguimiento</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <img alt="Silhouette of mountains" src="https://st4.depositphotos.com/3265223/24936/v/450/depositphotos_249366040-stock-illustration-fitness-gym-logo-with-strong.jpg" />
-  <ion-card-header>
-    <ion-card-title>Rastrea tu progreso, maximiza tus resultados.!</ion-card-title>
-  </ion-card-header>
+<ion-content class="ion-padding central-container">
+  <form (ngSubmit)="guardarSeguimiento()" class="form-container">
+    <!-- Fecha -->
+    <ion-item>
+      <ion-label position="stacked">Fecha</ion-label>
+      <ion-datetime
+        [(ngModel)]="seguimiento.fecha"
+        name="fecha"
+        presentation="date"
+      ></ion-datetime>
+    </ion-item>
 
-  <ion-card-content>
-    <ion-list>
-      <ion-item>
-        <ion-datetime></ion-datetime>
-      </ion-item>
-      <ion-item>
-        <ion-select label="Tipo rutina" >
-          <ion-select-option value="Pecho">Pecho</ion-select-option>
-          <ion-select-option value="Espalda">Espalda</ion-select-option>
-          <ion-select-option value="hombros">Hombros</ion-select-option>
-          <ion-select-option value="Brazo">Brazo</ion-select-option>
-          <ion-select-option value="Core">Core</ion-select-option>
-          <ion-select-option value="Pierna">Pierna</ion-select-option>
-          <ion-select-option value="Cardio">Cardio</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-select label="Estado">
-          <ion-select-option value="a">Compltado</ion-select-option>
-          <ion-select-option value="b">No terminado</ion-select-option>
-          <ion-select-option value="c">Sin iniciar</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-input placeholder="Pulsaciones por segundo">
-          <br>
-      </ion-input>
+    <!-- Rutina -->
+    <ion-item>
+      <ion-label position="stacked">Rutina</ion-label>
+      <ion-select
+        [(ngModel)]="seguimiento.tipoRutina"
+        name="tipoRutina"
+        placeholder="Seleccione una rutina"
+      >
+        <ion-select-option *ngFor="let rutina of rutinas" [value]="rutina.nombre_rutina">
+          {{ rutina.nombre_rutina }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
 
-      <ion-item>
-        <ion-input placeholder="Peso actual"></ion-input>
-      </ion-item>
+    <!-- Estado -->
+    <ion-item>
+      <ion-label position="stacked">Estado</ion-label>
+      <ion-radio-group [(ngModel)]="seguimiento.estado" name="estado">
+        <ion-item>
+          <ion-label>Completada</ion-label>
+          <ion-radio slot="start" [value]="true"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>No completada</ion-label>
+          <ion-radio slot="start" [value]="false"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-item>
 
-      </ion-item>
-    </ion-list>
-  </ion-card-content>
+    <!-- Heart Rate -->
+    <ion-item>
+      <ion-label position="stacked">Heart Rate</ion-label>
+      <ion-input
+        type="number"
+        [(ngModel)]="seguimiento.heartRate"
+        name="heartRate"
+        placeholder="Ingrese su frecuencia cardíaca"
+      ></ion-input>
+    </ion-item>
+
+    <!-- Botón Guardar -->
+    <ion-button expand="block" type="submit" color="primary" class="submit-button">
+      Guardar Seguimiento
+    </ion-button>
+  </form>
 </ion-content>
+

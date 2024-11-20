@@ -10,3 +10,19 @@ ion-header {
       font-size: 20px; /* Tamaño del texto */
     }
   }
+  .central-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Ocupa toda la altura del contenido */
+  }
+  
+  .form-container {
+    width: 100%;
+    max-width: 400px; /* Limita el ancho máximo del formulario */
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Opcional: sombra para destacar */
+    border-radius: 10px; /* Opcional: bordes redondeados */
+    background-color: #ffffff; /* Opcional: fondo blanco */
+  }
+  

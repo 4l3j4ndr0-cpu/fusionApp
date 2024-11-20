@@ -34,17 +34,18 @@ export class Rutina {
   id_user: string = "";
 }
 
-export class Estadistica {                                 
-  sesiones_completadas: number = 0;                
-  porcentaje_de_mejora: number = 0;               
-  heart_rate: number = 0;               
-  imc: number = 0;                      
-  id_user: number = 0;             
+export class Registro {
+  id_user: string = '';
+  heart_rate: number = 0;
+  sesion_completada: number = 0;
+  fecha: string = '';    
+}
+export class Estadistica {
+  sesiones_completadas: number = 0;
+  total_sesiones: number = 0;
+  porcentaje_de_mejora: number = 0;
+  heart_rate_promedio: number = 0;
+  imc: number = 0;
+  id_user: string = '';
 }
 
-export class registros {
-  id_user: string = "";
-  herat_rate: number = 0;
-  
-
-}

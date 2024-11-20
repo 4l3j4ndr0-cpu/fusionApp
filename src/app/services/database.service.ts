@@ -234,116 +234,66 @@ async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActua
   }
 
   // Tabla: estadisticas
-  // Tabla: estadisticas
-  /*async insertEstadistica(estadistica: any) {
-      const estadisticaData = {
-        date_recorded: estadistica.date_recorded,
-        sesiones_completadas: estadistica.sesiones_completadas,
-        total_sesiones: estadistica.total_sesiones,
-        porcentaje_de_mejora: estadistica.porcentaje_de_mejora,
-        tiempo_total_ent: estadistica.tiempo_total_ent,
-        heart_rate: estadistica.heart_rate,
-        imc: estadistica.imc,
-        id_user: estadistica.id_user,
-      };
+  // Insertar una estadística
+async insertEstadistica(estadistica: any) {
+  const estadisticaData = {
+    sesiones_completadas: estadistica.sesiones_completadas,
+    total_sesiones: estadistica.total_sesiones,
+    heart_rate_promedio: estadistica.heart_rate_promedio,
+    imc: estadistica.imc,
+    id_user: estadistica.id_user
+  };
 
-      try {
-        // Verificar si el usuario existe
-        const userRef = doc(this.firestore, 'usuarios', estadistica.id_user);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          await addDoc(collection(this.firestore, 'estadisticas'), estadisticaData);
-          console.log('Estadística insertada');
-        } else {
-          console.error('Usuario no encontrado');
-        }
-      } catch (error) {
-        console.error('Error al insertar estadística:', error);
-      }
-    }*/
-  async insertEstadistica(estadistica: any) {
-    const estadisticaData = {
-      date_recorded: estadistica.date_recorded,
-      sesiones_completadas: estadistica.sesiones_completadas,
-      total_sesiones: estadistica.total_sesiones,
-      porcentaje_de_mejora: estadistica.porcentaje_de_mejora,
-      tiempo_total_ent: estadistica.tiempo_total_ent,
-      heart_rate: estadistica.heart_rate,
-      imc: estadistica.imc,
-      id_user: estadistica.id_user,
-    };
-  
-    try {
-      await addDoc(collection(this.firestore, 'estadisticas'), estadisticaData);
-      console.log('Estadística insertada');
-    } catch (error) {
-      console.error('Error al insertar estadística:', error);
-    }
+  try {
+    await addDoc(collection(this.firestore, 'estadisticas'), estadisticaData);
+    console.log('Estadística insertada correctamente');
+  } catch (error) {
+    console.error('Error al insertar estadística:', error);
   }
+}
 
-  async getEstadisticas(): Promise<{ id: string; [key: string]: any }[]> {
-    try {
-      const snapshot = await getDocs(collection(this.firestore, 'estadisticas'));
-      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    } catch (error) {
-      console.error('Error al obtener estadísticas:', error);
-      return []; 
-    }
+// Obtener estadísticas por usuario
+async getEstadisticasPorUsuario(userId: string): Promise<{ id: string; [key: string]: any }[]> {
+  try {
+    const q = query(collection(this.firestore, 'estadisticas'), where('id_user', '==', userId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Error al obtener las estadísticas del usuario:', error);
+    return [];
   }
+}
 
-  async updateEstadistica(estadistica: any) {
-    const estadisticaData = {
-      date_recorded: estadistica.date_recorded,
-      sesiones_completadas: estadistica.sesiones_completadas,
-      total_sesiones: estadistica.total_sesiones,
-      porcentaje_de_mejora: estadistica.porcentaje_de_mejora,
-      tiempo_total_ent: estadistica.tiempo_total_ent,
-      heart_rate: estadistica.heart_rate,
-      imc: estadistica.imc,
-      id_user: estadistica.id_user,
-    };
+// Actualizar una estadística
+async updateEstadistica(id: string, estadistica: any) {
+  const estadisticaData = {
+    sesiones_completadas: estadistica.sesiones_completadas,
+    total_sesiones: estadistica.total_sesiones,
+    heart_rate_promedio: estadistica.heart_rate_promedio,
+    imc: estadistica.imc,
+    id_user: estadistica.id_user
+  };
 
-    try {
-      const estadisticaRef = doc(this.firestore, 'estadisticas', estadistica.id);
-      await updateDoc(estadisticaRef, estadisticaData);
-      console.log('Estadística actualizada');
-    } catch (error) {
-      console.error('Error al actualizar estadística:', error);
-    }
+  try {
+    const estadisticaRef = doc(this.firestore, 'estadisticas', id);
+    await updateDoc(estadisticaRef, estadisticaData);
+    console.log('Estadística actualizada correctamente');
+  } catch (error) {
+    console.error('Error al actualizar estadística:', error);
   }
+}
 
-  async deleteEstadistica(id: string) {
-    try {
-      await deleteDoc(doc(this.firestore, 'estadisticas', id));
-      console.log('Estadística eliminada');
-    } catch (error) {
-      console.error('Error al eliminar estadística:', error);
-    }
+// Eliminar una estadística
+async deleteEstadistica(id: string) {
+  try {
+    await deleteDoc(doc(this.firestore, 'estadisticas', id));
+    console.log('Estadística eliminada');
+  } catch (error) {
+    console.error('Error al eliminar estadística:', error);
   }
+}
 
   // Tabla: soporte
-  /*async insertSoporte(soporte: any) {
-    const soporteData = {
-      modificacion: soporte.modificacion,
-      razon: soporte.razon,
-      fecha: soporte.fecha,
-      id_user: soporte.id_user,
-    };
-  
-    try {
-      // Verificar si el usuario existe
-      const userRef = doc(this.firestore, 'usuarios', soporte.id_user);
-      const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) {
-        await addDoc(collection(this.firestore, 'soporte'), soporteData);
-        console.log('Soporte insertado');
-      } else {
-        console.error('Usuario no encontrado');
-      }
-    } catch (error) {
-      console.error('Error al insertar soporte:', error);
-    }
-  }*/
   async insertSoporte(soporte: any) {
     const soporteData = {
       modificacion: soporte.modificacion,
@@ -396,7 +346,63 @@ async updateRutina(nombreRutina: string, rutinaSeleccionada: Rutina, rutinaActua
       console.error('Error al eliminar soporte:', error);
     }
   }
+  //Tabla registro
+async insertRegistro(registro: any) {
+  const registroData = {
+    heartRate: registro.heartRate,
+    estado: registro.estado,
+    fecha: registro.fecha,
+    tipoRutina: registro.tipoRutina,
+    id_user: registro.id_user
+  };
+
+  try {
+    await addDoc(collection(this.firestore, 'registros'), registroData);
+    console.log('Registro insertado correctamente');
+  } catch (error) {
+    console.error('Error al insertar el registro:', error);
+  }
+}
+// Obtener registros por usuario
+async getRegistrosPorUsuario(userId: string): Promise<{ id: string; [key: string]: any }[]> {
+  try {
+    const q = query(collection(this.firestore, 'registros'), where('id_user', '==', userId));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error('Error al obtener los registros del usuario:', error);
+    return [];
+  }
 }
 
+// Actualizar un registro existente
+async updateRegistro(id: string, registro: any) {
+  const registroData = {
+    heart_rate: registro.heart_rate,
+    sesiones_completadas: registro.sesiones_completadas,
+    fecha: registro.fecha,
+    tiempo_total_entrenamiento: registro.tiempo_total_entrenamiento,
+    calorias: registro.calorias,
+    id_user: registro.id_user
+  };
 
-  // Aquí puedes añadir métodos para las tablas restantes: resumen, roles, rutina, rutina_ejercicios, rutina_usuario, soporte
+  try {
+    const registroRef = doc(this.firestore, 'registros', id);
+    await updateDoc(registroRef, registroData);
+    console.log('Registro actualizado correctamente');
+  } catch (error) {
+    console.error('Error al actualizar el registro:', error);
+  }
+}
+
+// Eliminar un registro
+async deleteRegistro(id: string) {
+  try {
+    await deleteDoc(doc(this.firestore, 'registros', id));
+    console.log('Registro eliminado');
+  } catch (error) {
+    console.error('Error al eliminar el registro:', error);
+  }
+}
+
+}
