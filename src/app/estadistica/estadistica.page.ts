@@ -6,17 +6,12 @@ import { CommonModule } from '@angular/common';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
+import { ChartConfiguration, ChartData, ChartDataset  } from 'chart.js';
 import { ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Registro } from '../services/modulos.service';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 
-interface Registro {
-  tipoRutina: string;
-  estado: boolean;
-  fecha: string; // ISO string o formato de fecha
-  heartRate: number;
-}
 
 @Component({
   selector: 'app-estadistica',
@@ -29,6 +24,8 @@ interface Registro {
 export class EstadisticasPage implements OnInit {
   @ViewChild('doughnutChart', { static: false }) doughnutChart?: BaseChartDirective;
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+  @ViewChild('lineChart', { static: false }) lineChart?: BaseChartDirective;
+  @ViewChild('barChart', { static: false }) barChart?: BaseChartDirective;
 
   idUser: string | null = null;
   sesionesPorRutina: { [key: string]: { completadas: number; noCompletadas: number } } = {};
@@ -40,6 +37,7 @@ export class EstadisticasPage implements OnInit {
   porcentajeCompletado: number = 0;
   isModalOpen = false; // Estado del modal
 
+  
   
   // grafico de dona de progreso
   public doughnutChartData: ChartConfiguration<'doughnut'>['data'] = {
@@ -54,7 +52,7 @@ export class EstadisticasPage implements OnInit {
   // Opciones de la dona
   public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,
-    maintainAspectRatio: true, // Mantener el aspecto proporcional
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         position: 'top',
@@ -71,14 +69,6 @@ export class EstadisticasPage implements OnInit {
           const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
           return `${percentage}%`;
         },
-      },
-    },
-    layout: {
-      padding: {
-        top: 20,
-        bottom: 20,
-        left: 20, // Opcional: Ajuste si es necesario
-        right: 20, // Opcional: Ajuste si es necesario
       },
     },
   };
@@ -129,29 +119,30 @@ export class EstadisticasPage implements OnInit {
     },
   ];
   
+  
 
   // Datos para el gráfico
+  public lineChartData: {
+    labels: string[];
+    datasets: ChartDataset<'line', (number | null)[]>[];
+  } = {
+    labels: [],
+    datasets: [],
+  };
+  
+  
+  
+
   public chartData: {
-    labels: string[]; // Especifica que las etiquetas son un array de strings
+    labels: string[];
     datasets: {
       label: string;
-      data: number[]; // Especifica que los datos son un array de números
-      backgroundColor: string[];
+      data: number[];
+      backgroundColor: string;
     }[];
   } = {
-    labels: [], // Inicializa como un array vacío de strings
-    datasets: [
-      {
-        label: 'Completadas',
-        data: [], // Inicializa como un array vacío de números
-        backgroundColor: ['rgba(75, 192, 192, 0.6)'],
-      },
-      {
-        label: 'No Completadas',
-        data: [], // Inicializa como un array vacío de números
-        backgroundColor: ['rgba(255, 99, 132, 0.6)'],
-      },
-    ],
+    labels: [],
+    datasets: [],
   };
 
   // Opciones del gráfico
@@ -184,21 +175,7 @@ export class EstadisticasPage implements OnInit {
       },
     },
   };
-  
-  public lineChartData: {
-    labels: string[]; // Etiquetas para el eje X (fechas)
-    datasets: {
-      label: string;
-      data: number[];
-      borderColor: string;
-      backgroundColor: string;
-      tension: number; // Suavidad de las líneas
-    }[];
-  } = {
-    labels: [], // Inicializamos las etiquetas vacías
-    datasets: [],
-  };
-  
+
   // Opciones del gráfico de líneas
   public lineChartOptions: ChartConfiguration<'line'>['options'] = {
     responsive: true,
@@ -209,6 +186,16 @@ export class EstadisticasPage implements OnInit {
       title: {
         display: true,
         text: 'Frecuencia Cardíaca por Rutina',
+      },
+    },
+    elements: {
+      point: {
+        radius: 5, // Asegura que los puntos sean visibles
+        hoverRadius: 8,
+      },
+      line: {
+        tension: 0.4, // Suavidad de las líneas
+        borderWidth: 2, // Grosor de la línea
       },
     },
     scales: {
@@ -228,13 +215,14 @@ export class EstadisticasPage implements OnInit {
     },
   };
   
+  
 
   constructor(
     private modalController: ModalController, // Injectar ModalController
     private dbService: DatabaseService,
     private loginService: LoginService,
     private cd: ChangeDetectorRef
-  ) {}
+  ) { }
 
 
   ngAfterViewInit() {
@@ -243,6 +231,45 @@ export class EstadisticasPage implements OnInit {
   }
 
   ngOnInit() {
+    this.lineChartOptions = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Frecuencia Cardíaca por Rutina',
+        },
+      },
+      elements: {
+        point: {
+          radius: 5,
+          hoverRadius: 8,
+        },
+        line: {
+          tension: 0.4,
+          borderWidth: 2,
+          spanGaps: true, // Conectar puntos válidos
+        },
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Fecha',
+          },
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Frecuencia Cardíaca (bpm)',
+          },
+        },
+      },
+    };
+  
     // Suscríbete al estado del usuario
     this.loginService.currentUser$.subscribe((user) => {
       if (user && user.uid) {
@@ -301,9 +328,10 @@ async calcularEstadisticas() {
 
     const registros = (await this.dbService.getRegistrosPorUsuario(this.idUser)) as Registro[];
 
+
     // Estructuras para almacenar datos
     const datosPorRutina: { [key: string]: { completadas: number; noCompletadas: number } } = {};
-    const lineChartData: { [tipoRutina: string]: { dates: string[]; heartRates: number[] } } = {};
+    const lineChartData: { [tipoRutina: string]: { dateToHeartRate: { [date: string]: number } } } = {};
 
     // Procesar registros
     registros.forEach((registro) => {
@@ -344,15 +372,13 @@ async calcularEstadisticas() {
 
       // Datos para el gráfico de líneas
       if (!lineChartData[rutina]) {
-        lineChartData[rutina] = { dates: [], heartRates: [] };
+        lineChartData[rutina] = { dateToHeartRate: {} };
       }
-      lineChartData[rutina].dates.push(fecha);
-      lineChartData[rutina].heartRates.push(heartRate);
+      lineChartData[rutina].dateToHeartRate[fecha] = heartRate;
     });
 
     // Obtener las rutinas
     this.rutinas = Object.keys(datosPorRutina);
-   
 
     // Calcular estadísticas generales
     const rutinas = await this.dbService.getRutinasPorUsuario(this.idUser);
@@ -390,49 +416,66 @@ async calcularEstadisticas() {
         {
           label: 'Completadas',
           data: Object.values(datosPorRutina).map((d) => d.completadas),
-          backgroundColor: ['rgba(75, 192, 192, 0.6)'],
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
         },
         {
           label: 'No Completadas',
           data: Object.values(datosPorRutina).map((d) => d.noCompletadas),
-          backgroundColor: ['rgba(255, 99, 132, 0.6)'],
+          backgroundColor: 'rgba(255, 99, 132, 0.6)',
         },
       ],
     };
 
     // Preparar datos para el gráfico de líneas
     this.lineChartData.labels = Array.from(
-      new Set(Object.values(lineChartData).flatMap((item) => item.dates))
+      new Set(
+        Object.values(lineChartData).flatMap((item) => Object.keys(item.dateToHeartRate))
+      )
     ).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
-    this.lineChartData.datasets = Object.keys(lineChartData).map((key) => ({
-      label: key, // Nombre de la rutina
-      data: this.lineChartData.labels.map((label) => {
-        const index = lineChartData[key].dates.indexOf(label);
-        return index !== -1 ? lineChartData[key].heartRates[index] : 0; // Completa con 0 si no hay datos
-      }),
-      borderColor: this.getRandomColor(),
-      backgroundColor: 'rgba(0, 0, 0, 0)',
-      tension: 0.4,
-    }));
+    // Dentro de calcularEstadisticas(), al asignar datasets
+    this.lineChartData.datasets = Object.keys(lineChartData).map((rutina, index) => {
+      const dateToHeartRate = lineChartData[rutina].dateToHeartRate;
+      const data = this.lineChartData.labels.map((date) => dateToHeartRate[date] ?? null);
+    
+      return {
+        label: rutina,
+        data: data,
+        borderColor: this.getRandomColor(index),
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        tension: 0.4,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        spanGaps: true,
+      } as ChartDataset<'line', (number | null)[]>;
+    });
 
     // Imprimir para depuración
     console.log('Etiquetas (labels):', this.lineChartData.labels);
     console.log('Datos del dataset:', this.lineChartData.datasets);
-    console.log('Fechas por rutina:', lineChartData);
+    console.log('Datos por rutina:', lineChartData);
 
     // Forzar actualizaciones
     this.cd.detectChanges();
+    this.lineChart?.update();
+    this.barChart?.update();
     this.chart?.update();
+    setTimeout(() => {
+      this.chart?.update();
+    }, 100);
+
   } catch (error) {
     console.error('Error al calcular estadísticas:', error);
   }
 }
 
+
 // Método para generar colores aleatorios
-getRandomColor(): string {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+getRandomColor(index: number): string {
+  const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
+  return colors[index % colors.length];
 }
+
 
 //Filtrado de rutina 
 async filtrarRutina() {
@@ -445,7 +488,6 @@ async filtrarRutina() {
     console.log('Mostrando todas las rutinas.');
     await this.calcularEstadisticas();
     this.cd.detectChanges();
-    //this.doughnutChart?.update();
     this.chart?.update();
     return;
   }
@@ -453,17 +495,15 @@ async filtrarRutina() {
   try {
     console.log('Filtrando registros para la rutina:', this.selectedRutina);
 
-    const registros = await this.dbService.getRegistrosPorUsuario(this.idUser);
+    const registros = (await this.dbService.getRegistrosPorUsuario(this.idUser)) as Registro[];
 
     const registrosFiltrados = registros.filter(
-      (registro: { tipoRutina: string; estado: boolean }) =>
-        registro.tipoRutina === this.selectedRutina
+      (registro: Registro) => registro.tipoRutina === this.selectedRutina
     );
 
     const completadas = registrosFiltrados.filter((reg) => reg.estado === true).length;
     const noCompletadas = registrosFiltrados.length - completadas;
 
-    // Reasignar datos completos para el gráfico de dona
     this.doughnutChartData = {
       ...this.doughnutChartData,
       datasets: [
@@ -474,38 +514,71 @@ async filtrarRutina() {
       ],
     };
 
-    // Reasignar datos completos para el gráfico de barras
+    // Preparar datos para el gráfico de líneas con los registros filtrados
+    const lineChartData: { dateToHeartRate: { [date: string]: number } } = { dateToHeartRate: {} };
+
+    registrosFiltrados.forEach((registro) => {
+      const rawFecha = registro.fecha;
+      const fechaProcesada = this.procesarFecha(rawFecha);
+      if (fechaProcesada) {
+        lineChartData.dateToHeartRate[fechaProcesada] = registro.heartRate;
+      }
+    });
+
+    // Actualizar etiquetas del gráfico de líneas
+    this.lineChartData.labels = Object.keys(lineChartData.dateToHeartRate).sort(
+      (a, b) => new Date(a).getTime() - new Date(b).getTime()
+    );
+
+    // Actualizar datasets del gráfico de líneas
+    const data = this.lineChartData.labels.map(
+      (date) => lineChartData.dateToHeartRate[date] ?? null
+    );
+
+    this.lineChartData.datasets = [
+      {
+        label: this.selectedRutina,
+        data: data,
+        borderColor: this.getRandomColor(0),
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        tension: 0.4,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        spanGaps: true,
+      } as ChartDataset<'line', (number | null)[]>,
+    ];
+
+    // Actualizar gráfico de barras si es necesario
     this.chartData = {
-      labels: [this.selectedRutina],
+      labels: registrosFiltrados.map((reg) => {
+        const fechaProcesada = this.procesarFecha(reg.fecha);
+        return fechaProcesada ? fechaProcesada : '';
+      }),
       datasets: [
         {
-          label: 'Completadas',
-          data: [completadas],
-          backgroundColor: ['rgba(75, 192, 192, 0.6)'],
-        },
-        {
-          label: 'No Completadas',
-          data: [noCompletadas],
-          backgroundColor: ['rgba(255, 99, 132, 0.6)'],
+          label: 'Frecuencia Cardíaca',
+          data: registrosFiltrados.map((reg) => reg.heartRate),
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
         },
       ],
     };
 
-    // Actualizar progreso mensual
     this.totalSesionesRealizadas = registrosFiltrados.length;
     this.sesionesCompletadas = completadas;
     this.porcentajeCompletado = this.totalSesionesRealizadas
       ? Math.round((this.sesionesCompletadas / this.totalSesionesRealizadas) * 100)
       : 0;
 
-    // Forzar la actualización
+    // Forzar la detección de cambios y actualizar el gráfico
     this.cd.detectChanges();
-    //this.doughnutChart?.update();
+    this.lineChart?.update();
+    this.barChart?.update();
     this.chart?.update();
   } catch (error) {
     console.error('Error al filtrar registros por rutina:', error);
   }
 }
+
 
 // Uso de modal para la opción de tomar la rutina
 
@@ -524,6 +597,29 @@ cerrarModal() {
  // Abrir modal
  abrirModal() {
   this.isModalOpen = true;
+}
+
+private procesarFecha(rawFecha: string): string | null {
+  let fecha = '';
+
+  try {
+    if (rawFecha && /^\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}$/.test(rawFecha)) {
+      // Formato personalizado 'DD-MM-YYYY HH:mm:ss'
+      const [day, month, yearAndTime] = rawFecha.split('-');
+      const [year, time] = yearAndTime.split(' ');
+      fecha = `${year}-${month}-${day}`; // Convertimos a formato 'YYYY-MM-DD'
+    } else if (!isNaN(new Date(rawFecha).getTime())) {
+      // Si es una fecha válida
+      fecha = new Date(rawFecha).toISOString().split('T')[0];
+    } else {
+      console.warn('Fecha inválida detectada y omitida:', rawFecha);
+      return null;
+    }
+    return fecha;
+  } catch (error) {
+    console.warn('Error al procesar fecha:', rawFecha, error);
+    return null;
+  }
 }
 
 }

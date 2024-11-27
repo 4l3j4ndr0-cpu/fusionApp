@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, getDoc, setDoc } from '@angular/fire/firestore';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
-import { Ejercicio, Rutina } from './modulos.service';
+import { Ejercicio, Registro, Rutina } from './modulos.service';
 
 @Injectable({
   providedIn: 'root',
@@ -371,16 +371,29 @@ async insertRegistro(registro: any) {
 }
 
 // Obtener registros por usuario
-async getRegistrosPorUsuario(userId: string): Promise<{ tipoRutina: string; estado: boolean }[]> {
+async getRegistrosPorUsuario(userId: string): Promise<Registro[]> {
   console.log('Obteniendo registros para usuario:', userId);
   const q = query(collection(this.firestore, 'registros'), where('id_user', '==', userId));
   const snapshot = await getDocs(q);
 
-  const registros = snapshot.docs.map((doc) => doc.data() as { tipoRutina: string; estado: boolean });
-  console.log('Registros obtenidos:', registros);
+  const registros: Registro[] = snapshot.docs.map((doc) => {
+    const data = doc.data();
+    return {
+      tipoRutina: data['tipoRutina'] || '',
+      estado: data['estado'] || false,
+      fecha: data['fecha'] || '',
+      heartRate: data['heartRate'] || 0,
+      id_user: data['id_user'], // Opcional
+      sesion_completada: data['sesion_completada'], // Opcional
+    };
+  });
 
+  console.log('Registros obtenidos:', registros);
   return registros;
 }
+
+
+
 
 
 

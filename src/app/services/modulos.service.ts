@@ -30,12 +30,13 @@ export class Rutina {
   id_user: string = "";
 }
 
-export class Registro {
-  id_user: string = '';
-  heartRate: number = 0;
-  sesion_completada: number = 0;
-  fecha!: Date;    
+export interface Registro {
+  tipoRutina: string; // Asegúrate de incluir esta propiedad
+  estado: boolean;
+  fecha: string; // ISO string
+  heartRate: number;
 }
+
 
 export class Estadistica {
   sesiones_completadas: number = 0;
