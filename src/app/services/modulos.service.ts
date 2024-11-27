@@ -32,10 +32,11 @@ export class Rutina {
 
 export class Registro {
   id_user: string = '';
-  heart_rate: number = 0;
+  heartRate: number = 0;
   sesion_completada: number = 0;
-  fecha: string = '';    
+  fecha!: Date;    
 }
+
 export class Estadistica {
   sesiones_completadas: number = 0;
   total_sesiones: number = 0;

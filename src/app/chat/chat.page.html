@@ -17,8 +17,9 @@
           <!-- Avatar -->
           <img
             class="chat-avatar"
-            [src]="item.from === 'user' ? 'assets/icon/img/avatar.png' : 'assets/icon/img/google-gemini-icon.png'"
+            [src]="item.from === 'user' ? 'assets/icon/img/avatar.webp' : 'assets/icon/img/google-gemini-icon.webp'"
             alt="Avatar"
+            loading="lazy"
           />
           <!-- Mensaje -->
           <div class="bubble">
@@ -27,7 +28,7 @@
         </div>
       </ng-container>
       <div *ngIf="loading" class="typing-indicator">
-        <img src="assets/icon/img/google-gemini-icon.png" alt="Gemini Bot">
+        <img src="assets/icon/img/google-gemini-icon.webp" alt="Gemini Bot"  loading="lazy" >
         <span>Escribiendo...</span>
       </div>
     </main>

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { provideRouter, Routes, withPreloading, PreloadAllModules } from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -8,7 +8,7 @@ export const routes: Routes = [
   },
   {
     path: 'pruebas',
-    loadComponent: () => import('./pruebas/pruebas.page').then(m => m.PruebasPage),
+    loadComponent: () => import('./pruebas/pruebas.page').then((m) => m.PruebasPage),
     children: [
       {
         path: 'home',
@@ -16,40 +16,49 @@ export const routes: Routes = [
       },
       {
         path: 'chat',
-        loadComponent: () => import('./chat/chat.page').then(m => m.ChatPage),
+        loadComponent: () => import('./chat/chat.page').then((m) => m.ChatPage),
       },
       {
         path: 'rutina',
-        loadComponent: () => import('./rutina/rutina.page').then(m => m.RutinaPage),
+        loadComponent: () => import('./rutina/rutina.page').then((m) => m.RutinaPage),
       },
       {
         path: 'datos-personales',
-        loadComponent: () => import('./datos-personales/datos-personales.page').then(m => m.DatosPersonalesPage),
+        loadComponent: () =>
+          import('./datos-personales/datos-personales.page').then((m) => m.DatosPersonalesPage),
       },
       {
         path: 'estadistica',
-        loadComponent: () => import('./estadistica/estadistica.page').then(m => m.EstadisticasPage),
+        loadComponent: () =>
+          import('./estadistica/estadistica.page').then((m) => m.EstadisticasPage),
       },
       {
         path: 'seguimiento',
-        loadComponent: () => import('./seguimiento/seguimiento.page').then(m => m.SeguimientoPage),
+        loadComponent: () =>
+          import('./seguimiento/seguimiento.page').then((m) => m.SeguimientoPage),
       },
       {
         path: 'nutri-move',
-        loadComponent: () => import('./nutri-move/nutri-move.page').then(m => m.NutriMovePage),
+        loadComponent: () =>
+          import('./nutri-move/nutri-move.page').then((m) => m.NutriMovePage),
       },
     ],
   },
   {
     path: 'registro',
-    loadComponent: () => import('./registro/registro.page').then(m => m.RegistroPage),
+    loadComponent: () => import('./registro/registro.page').then((m) => m.RegistroPage),
   },
   {
     path: 'login',
-    loadComponent: () => import('./login/login.page').then(m => m.LoginPage),
+    loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
   },
   {
     path: 'completar-perfil',
-    loadComponent: () => import('./completar-perfil/completar-perfil.page').then( m => m.CompletarPerfilPage)
+    loadComponent: () =>
+      import('./completar-perfil/completar-perfil.page').then((m) => m.CompletarPerfilPage),
   },
+];
+
+export const appRoutingProviders = [
+  provideRouter(routes, withPreloading(PreloadAllModules)), // Configuración de precarga
 ];

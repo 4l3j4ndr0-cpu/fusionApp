@@ -6,42 +6,93 @@
 
 <ion-content>
   <div class="estadisticas-container">
+    
     <ion-card>
       <ion-card-header>
         <ion-card-title>Progreso Mensual</ion-card-title>
       </ion-card-header>
+
+      <ion-modal
+        [isOpen]="isModalOpen"
+        [breakpoints]="[0.25, 0.5, 1]"
+        [initialBreakpoint]="0.5"
+        (didDismiss)="cerrarModal()"
+      >
+        <ng-template>
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>Seleccionar Rutina</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+
+          <ion-content>
+            <ion-list>
+              <!-- Opción 'Todas' -->
+              <ion-item (click)="seleccionarRutina('')">
+                <ion-label>Todas</ion-label>
+              </ion-item>
+              <!-- Otras Rutinas -->
+              <ion-item *ngFor="let rutina of rutinas" (click)="seleccionarRutina(rutina)">
+                <ion-label>{{ rutina }}</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+
+  
       <ion-card-content>
-        <p><strong>Total de Sesiones:</strong> {{ totalSesionesMensuales }}</p>
+        <p><strong>Total de Sesiones Mensuales:</strong> {{ totalSesionesMensuales }}</p>
+        <p><strong>Total de Sesiones Realizadas:</strong> {{ totalSesionesRealizadas }}</p>
         <p><strong>Sesiones Completadas:</strong> {{ sesionesCompletadas }}</p>
-        <ion-progress-bar
-          [value]="porcentajeCompletado / 100"
-          color="success">
-        </ion-progress-bar>
-        <p><strong>Porcentaje Completado:</strong> {{ porcentajeCompletado | number:'1.0-2' }}%</p>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Gráfico de Frecuencia Cardíaca Promedio por Día -->
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Frecuencia Cardíaca Promedio por Día</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <div style="display: block; width: 100%; height: 300px;">
-          <canvas id="frecuenciaCardiacaDiariaCanvas"></canvas>
+        <div class="chart-container">
+          <canvas
+            #doughnutChart
+            baseChart
+            [data]="doughnutChartData"
+            [options]="doughnutChartOptions"
+            [type]="'doughnut'"
+            [plugins]="doughnutChartPlugins"
+          ></canvas>
+        </div>
+        <div class="button-container">
+          <ion-button expand="block" (click)="abrirModal()" >Seleccionar Rutina</ion-button>
         </div>
       </ion-card-content>
     </ion-card>
 
-    <!-- Gráfico de Frecuencia Cardíaca por Rutina -->
+    
+
+    <!-- Gráfico de sesiones completas y no completas mensuales -->
     <ion-card>
       <ion-card-header>
-        <ion-card-title>Frecuencia Cardíaca Promedio por Rutina</ion-card-title>
+        <ion-card-title>Sesiones Mensuales</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <div style="display: block; width: 100%; height: 300px;">
-          <canvas id="frecuenciaCardiacaRutinaCanvas"></canvas>
+        <div class="chart-container">
+          <canvas
+            baseChart
+            [data]="chartData"
+            [options]="chartOptions"
+            [type]="'bar'">
+          </canvas>
         </div>
+
+        <!-- Gráfico de líneas -->
+        <div>
+          <canvas
+          baseChart
+          [datasets]="lineChartData.datasets"
+          [labels]="lineChartData.labels"
+          [options]="lineChartOptions"
+          chartType="line"
+        ></canvas>
+
+        </div>
+
       </ion-card-content>
     </ion-card>
   </div>

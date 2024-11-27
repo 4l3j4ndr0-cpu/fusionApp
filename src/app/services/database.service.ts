@@ -369,22 +369,25 @@ async insertRegistro(registro: any) {
     console.error('Error al insertar el registro:', error);
   }
 }
+
 // Obtener registros por usuario
-async getRegistrosPorUsuario(userId: string): Promise<{ id: string; [key: string]: any }[]> {
-  try {
-    const q = query(collection(this.firestore, 'registros'), where('id_user', '==', userId));
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  } catch (error) {
-    console.error('Error al obtener los registros del usuario:', error);
-    return [];
-  }
+async getRegistrosPorUsuario(userId: string): Promise<{ tipoRutina: string; estado: boolean }[]> {
+  console.log('Obteniendo registros para usuario:', userId);
+  const q = query(collection(this.firestore, 'registros'), where('id_user', '==', userId));
+  const snapshot = await getDocs(q);
+
+  const registros = snapshot.docs.map((doc) => doc.data() as { tipoRutina: string; estado: boolean });
+  console.log('Registros obtenidos:', registros);
+
+  return registros;
 }
+
+
 
 // Actualizar un registro existente
 async updateRegistro(id: string, registro: any) {
   const registroData = {
-    heart_rate: registro.heart_rate,
+    heartRate: registro.heartRate,
     sesiones_completadas: registro.sesiones_completadas,
     fecha: registro.fecha,
     tiempo_total_entrenamiento: registro.tiempo_total_entrenamiento,
